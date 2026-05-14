@@ -1,0 +1,1 @@
+python3 py3-pandas py3-duckdb py3-openpyxl py3-requests bash
