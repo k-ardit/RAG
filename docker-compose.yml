@@ -7,4 +7,15 @@ services:
       - ./data:/data
     env_file: .env
 
+  testexport:
+    build:
+      context: ./2_dockerTestExport
+    volumes:
+      - ./data:/data
+    env_file: .env
+    #command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   export:
+    #     condition: service_completed_successfully
+
 
