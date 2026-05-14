@@ -1,0 +1,10 @@
+services:
+
+  export:
+    build:
+      context: ./1_dockerExport
+    volumes:
+      - ./data:/data
+    env_file: .env
+
+
