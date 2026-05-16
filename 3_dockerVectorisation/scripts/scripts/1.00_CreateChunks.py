@@ -18,6 +18,7 @@ folderOpenData = "opendata/"
 donneeNettoyee = "FichierFinal.xlsx"
 folderChunks = "chunks/"
 fileChunks = "chunks.xlsx"
+fileChunks2 = "chunks.pkl"
 """"""
 
 
@@ -102,8 +103,10 @@ dfFinal["metadata"] = "[{ motsCles : " + data["keywords_fr"].astype(str) + "},{ 
 dfFinal["model"] = os.environ["MODEL_EMBEDDING"]
 dfFinal['rowHash'] = dfFinal.apply(lambda row: hashlib.md5(row.astype(str).str.cat(sep='|').encode()).hexdigest(),axis=1
 )
+# On tri les lignes par hash (pour avoir le même positionnement que les indexde fin)
+dfFinal.sort_values('rowHash')
 dfFinal.to_excel(pathData + folderChunks + fileChunks, index=False)
-""""""
-
-
 print("Fichier chunks.xlsx crée")
+# dfFinal.to_pickle(pathData + folderChunks + fileChunks2, index=False)
+# print("Fichier chunks.pkl crée")
+""""""

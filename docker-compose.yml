@@ -29,4 +29,15 @@ services:
       testexport:
         condition: service_completed_successfully
 
+  testvectorisation:
+    build:
+      context: ./4_dockerTestVectorisation
+    volumes:
+      - ./data:/data
+    env_file: .env
+    #command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   vectorisation:
+    #     condition: service_completed_successfully
+
 
