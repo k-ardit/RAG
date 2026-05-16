@@ -14,8 +14,19 @@ services:
       - ./data:/data
     env_file: .env
     #command: sh -c "tail -f /dev/null"
-    # depends_on:
-    #   export:
-    #     condition: service_completed_successfully
+    depends_on:
+      export:
+        condition: service_completed_successfully
+
+  vectorisation:
+    build:
+      context: ./3_dockerVectorisation
+    volumes:
+      - ./data:/data
+    env_file: .env
+    #command: sh -c "tail -f /dev/null"
+    depends_on:
+      testexport:
+        condition: service_completed_successfully
 
 
