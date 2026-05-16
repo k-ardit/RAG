@@ -26,6 +26,7 @@ folderChunks = "chunks/"
 folderVectors = "vectors/"
 donneeNettoyee = "FichierFinal.xlsx"
 fileChunk = "chunks.xlsx"
+#fileChunk = "chunks2.pkl"
 fileVectors = "vectors.xlsx"
 """"""
 
@@ -34,6 +35,7 @@ fileVectors = "vectors.xlsx"
 data : Récupération des données néttoyées dans un format dataframe"""
 data = pd.read_excel(pathData + folderOpenData + donneeNettoyee, sheet_name="Sheet1").astype(str)
 dataChunk = pd.read_excel(pathData + folderChunks + fileChunk, sheet_name="Sheet1").astype(str)
+#dataChunk = pd.read_pickle(pathData + folderChunks + fileChunk, sheet_name="Sheet1").astype(str)
 if os.path.exists(pathData + folderVectors + fileVectors):
     dfVectors = pd.read_excel(pathData + folderVectors + fileVectors, sheet_name="Sheet1").astype(str)
 else:
@@ -97,5 +99,7 @@ if dfChunksToEmbed.shape[0] > 0:
         print("Aucun embedding généré.")
 
     dfVectors = pd.concat([dfVectors, pd.DataFrame(all_hash_embeddings)], ignore_index=True)
+    # On tri les lignes par hash (pour avoir le même positionnement que les index de fin)
+    dfVectors.sort_values('hash')
     dfVectors.to_excel(pathData + folderVectors + fileVectors, index=False)
 

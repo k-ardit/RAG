@@ -20,6 +20,8 @@ fileIndex = "faiss_index.idx"
 
 
 doneeVectorisee = pd.read_excel(pathData + folderVectors + fileVectors, sheet_name="Sheet1")
+# On tri les lignes par hash (pour avoir le même positionnement que les chunks de début)
+doneeVectorisee.sort_values('hash')
 
 all_embeddings = []
 
