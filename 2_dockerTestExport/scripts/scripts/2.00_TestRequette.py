@@ -56,8 +56,8 @@ if(textEmail) == None:
 nbLines : nombre total de lignes des données téléchargées
 firstBeginDate : Assignation de la date de départ voulue (aujourd'hui moins un an (365 jours, soit 8760 heures))"""
 nbLines = final.shape[0]
-# firstBeginDate = (datetime.now() - timedelta(hours=8760)).strftime("%Y/%m/%d")
-firstBeginDate = pd.to_datetime(datetime.now() - timedelta(hours=8760), format="%Y-%m-%d")
+# firstBeginDate = (datetime.now() - timedelta(hours=8760 + 25)).strftime("%Y/%m/%d")
+firstBeginDate = pd.to_datetime(datetime.now() - timedelta(hours=8785), format="%Y-%m-%d")
 
 # Requêtte pour vérifier que toutes les données sont comprise dans l'année passée (Colonne firstdate_begin)
 def getCorrectDate(x):

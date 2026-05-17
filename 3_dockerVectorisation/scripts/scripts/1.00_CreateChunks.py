@@ -107,6 +107,6 @@ dfFinal['rowHash'] = dfFinal.apply(lambda row: hashlib.md5(row.astype(str).str.c
 dfFinal.sort_values('rowHash')
 dfFinal.to_excel(pathData + folderChunks + fileChunks, index=False)
 print("Fichier chunks.xlsx crée")
-# dfFinal.to_pickle(pathData + folderChunks + fileChunks2, index=False)
-# print("Fichier chunks.pkl crée")
+dfFinal.to_pickle(pathData + folderChunks + fileChunks2, index=False)
+print("Fichier chunks.pkl crée")
 """"""
