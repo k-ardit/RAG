@@ -13,10 +13,10 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    #command: sh -c "tail -f /dev/null"
-    depends_on:
-      export:
-        condition: service_completed_successfully
+    command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   export:
+    #     condition: service_completed_successfully
 
   vectorisation:
     build:
@@ -24,10 +24,10 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    #command: sh -c "tail -f /dev/null"
-    depends_on:
-      testexport:
-        condition: service_completed_successfully
+    command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   testexport:
+    #     condition: service_completed_successfully
 
   testvectorisation:
     build:
@@ -35,10 +35,10 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    #command: sh -c "tail -f /dev/null"
-    depends_on:
-      vectorisation:
-        condition: service_completed_successfully
+    command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   vectorisation:
+    #     condition: service_completed_successfully
 
   reponse:
     build:
@@ -46,9 +46,19 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    #command: sh -c "tail -f /dev/null"
-    depends_on:
-      testvectorisation:
-        condition: service_completed_successfully
+    command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   testvectorisation:
+    #     condition: service_completed_successfully
 
+  testragas:
+    build:
+      context: ./6_dockerRagasTest
+    volumes:
+      - ./data:/data
+    env_file: .env
+    command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   reponse:
+    #     condition: service_completed_successfully
 
