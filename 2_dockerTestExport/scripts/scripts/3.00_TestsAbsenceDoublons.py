@@ -6,20 +6,9 @@ import duckdb
 import os
 
 
-"""Instanciation des variables de dossiers et fichiers
-pathData : dossier qui contient toutes les données
-folderOpenData : dossier qui contient les données téléchargées brutes (json), les hash historisé des données (hashFiles.xsls),
-                les données exportées néttoyées (fichierFinal.xlsx) et le rapport de test de téléchargement et de néttoyage (testExport.xlsx)
-donneeNettoyee : fichier avec les données néttoyées"""
-pathData = os.environ["PATHDATA"]
-folderOpenData = "opendata/"
-donneeNettoyee = "FichierFinal.xlsx"
-""""""
-
-
 """Récupération des données
 1 : Récupération des données néttoyées dans un format dataframe"""
-final = pd.read_excel(pathData + folderOpenData + donneeNettoyee, sheet_name="Sheet1")
+final = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"], sheet_name="Sheet1")
 """"""
 
 

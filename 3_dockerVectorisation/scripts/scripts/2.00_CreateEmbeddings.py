@@ -15,29 +15,12 @@ import json
 import os.path
 
 
-"""Instanciation des variables de dossiers et fichiers
-pathData : dossier qui contient toutes les données
-folderOpenData : dossier qui contient les données téléchargées brutes (json), les hash historisé des données (hashFiles.xsls),
-                les données exportées néttoyées (fichierFinal.xlsx) et le rapport de test de téléchargement et de néttoyage (testExport.xlsx)
-donneeNettoyee : fichier avec les données néttoyées"""
-pathData = os.environ["PATHDATA"]
-folderOpenData = "opendata/"
-folderChunks = "chunks/"
-folderVectors = "vectors/"
-donneeNettoyee = "FichierFinal.xlsx"
-fileChunk = "chunks.xlsx"
-#fileChunk = "chunks2.pkl"
-fileVectors = "vectors.xlsx"
-""""""
-
-
 """Récupération des données
 data : Récupération des données néttoyées dans un format dataframe"""
-data = pd.read_excel(pathData + folderOpenData + donneeNettoyee, sheet_name="Sheet1").astype(str)
-dataChunk = pd.read_excel(pathData + folderChunks + fileChunk, sheet_name="Sheet1").astype(str)
-#dataChunk = pd.read_pickle(pathData + folderChunks + fileChunk, sheet_name="Sheet1").astype(str)
-if os.path.exists(pathData + folderVectors + fileVectors):
-    dfVectors = pd.read_excel(pathData + folderVectors + fileVectors, sheet_name="Sheet1").astype(str)
+data = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"], sheet_name="Sheet1").astype(str)
+dataChunk = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"], sheet_name="Sheet1").astype(str)
+if os.path.exists(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"]):
+    dfVectors = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"], sheet_name="Sheet1").astype(str)
 else:
      dfVectors = pd.DataFrame(columns=["hash", "vectors"]) # Création d'un dataframe vide avec uniquement la colonnne utilisée par la suite
 """"""
@@ -103,5 +86,5 @@ if dfChunksToEmbed.shape[0] > 0:
 
 
 dfVectors = dfVectors.sort_values('hash')
-dfVectors.to_excel(pathData + folderVectors + fileVectors, index=False)
+dfVectors.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"], index=False)
 

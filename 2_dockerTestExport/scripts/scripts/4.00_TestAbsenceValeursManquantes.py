@@ -19,7 +19,7 @@ donneeNettoyee = "FichierFinal.xlsx"
 
 """Récupération des données
 1 : Récupération des données néttoyées dans un format dataframe"""
-final = pd.read_excel(pathData + folderOpenData + donneeNettoyee, sheet_name="Sheet1")
+final = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"], sheet_name="Sheet1")
 """"""
 
 

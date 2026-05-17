@@ -18,12 +18,15 @@ CHAT_MODEL = "mistral-large-latest" # Ou un autre modèle comme mistral-large-la
 
 # --- Configuration de l'Indexation ---
 # INPUT_DATA_URL = os.getenv("INPUT_DATA_URL") # Décommentez si vous utilisez une URL
-INPUT_DIR = "/data/inputs"                # Dossier pour les données sources après extraction
-VECTOR_DB_DIR = "/data/vectors"         # Dossier pour stocker l'index Faiss et les chunks
-CHUNK_DB_DIR = "/data/chunks"
-INDEX_DB_DIR = "/data/index"
-DOCUMENT_CHUNKS_FILE = os.path.join(CHUNK_DB_DIR, "chunks.pkl")
-FAISS_INDEX_FILE = os.path.join(INDEX_DB_DIR, "faiss_index.idx")
+INPUT_DIR = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"]               # Dossier pour les données sources après extraction
+VECTOR_DB_DIR = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"]         # Dossier pour stocker l'index Faiss et les chunks
+
+CHUNK_DB_DIR = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"]
+INDEX_DB_DIR = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"]
+DOCUMENT_CHUNKS_FILE = os.path.join(CHUNK_DB_DIR,  os.environ["FILE_CHUNKS_PKL"])
+FAISS_INDEX_FILE = os.path.join(INDEX_DB_DIR, os.environ["FILE_INDEX"])
+
+os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"]
 
 CHUNK_SIZE = 1500                   # Taille des chunks en *caractères* (vise ~512 tokens)
 CHUNK_OVERLAP = 150                 # Chevauchement en *caractères*
@@ -33,7 +36,7 @@ EMBEDDING_BATCH_SIZE = 32           # Taille des lots pour l'API d'embedding
 SEARCH_K = 1000                      # Nombre de documents à récupérer par défaut
 
 # --- Configuration de la Base de Données ---
-DATABASE_DIR = "/data/database"
+DATABASE_DIR = "/etc/database"
 DATABASE_FILE = os.path.join(DATABASE_DIR, "interactions.db")
 DATABASE_URL = f"sqlite:///{DATABASE_FILE}" # URL pour SQLAlchemy
 

@@ -3,16 +3,6 @@
 import duckdb
 import os
 
-"""Instanciation des variables de dossiers et fichiers
-pathData : dossier qui contient toutes les données
-folderOpenData : dossier qui contient les données téléchargées brutes (json), les hash historisé des données (hashFiles.xsls),
-                les données exportées néttoyées (fichierFinal.xlsx) et le rapport de test de téléchargement et de néttoyage (testExport.xlsx)
-fichier : nom du fichier avec les données nétoyées"""
-pathData = os.environ["PATHDATA"]
-folderOpenData = "opendata/"
-fichier = "FichierFinal.xlsx"
-""""""
-
 
 """Instanciation des paramètres de base de données DuckDB
 database : base de donnée utilisée
@@ -34,7 +24,7 @@ conn.sql("ATTACH '"+ database + ".db'")
 # Create dataframe with data
 finalDf = conn.sql("SELECT * FROM " + database + "." + table + ";").df().astype("str")
 # Save the data to Excel
-finalDf.to_excel(pathData + folderOpenData + fichier, index=False)
+finalDf.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"], index=False)
 """"""
 
 

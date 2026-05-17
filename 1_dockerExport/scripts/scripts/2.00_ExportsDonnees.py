@@ -9,19 +9,6 @@ from datetime import datetime
 import os
 
 
-"""Instanciation des variables de dossiers et fichiers
-pathData : dossier qui contient toutes les données
-folderOpenData : dossier qui contient les données téléchargées brutes (json), les hash historisé des données (hashFiles.xsls),
-                les données exportées néttoyées (fichierFinal.xlsx) et le rapport de test de téléchargement et de néttoyage (testExport.xlsx)
-file : nom du fichier contenant les données brutes
-hashFiles : nom du fichier contenant l'historique des hash des données"""
-pathData = os.environ["PATHDATA"]
-folderOpenData = "opendata/"
-file = "publicEvent.json"
-hashFiles = "hashFiles.xlsx"
-""""""
-
-
 """Instanciation des paramètres de base de données DuckDB
 database : base de donnée utilisée
 table : table crée pour insérer les données brutes"""
@@ -40,7 +27,7 @@ conn.sql("ATTACH '"+ database + ".db'")
 1 : Suppréssion de la table si elle existe
 2 : Création et insertion des données dans la table"""
 conn.sql("DROP TABLE IF EXISTS "+ database + "." + table)
-conn.sql("CREATE TABLE " + database + "." + table + " AS SELECT * FROM read_json('" + pathData + folderOpenData + file + "')")
+conn.sql("CREATE TABLE " + database + "." + table + " AS SELECT * FROM read_json('" + os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_BRUT"] + "')")
 """"""
 
 
@@ -65,17 +52,17 @@ conn.sql("UPDATE openclassrooms.publicEvent SET rowHash = md5(openclassrooms.pub
 """Insertion des données dans le fichier hashFiles.xlsx (fichier pouvant ne pas exister ou dèjà contenir des données)
 1 : Vérification de l'existance du fichier (création du fichier s'il n'existe pas)
 2 : Récupération des anciennes données
-3 : Concatenation des données
+3 : Concatenation des données  
 4 : Insertion de toutes les données (impossible de rajouter des données, il faut recréer le fichier)"""
-if not os.path.exists(pathData + folderOpenData + hashFiles): # Si le fichier n'existe pas
-    df_new.to_excel(pathData + folderOpenData + hashFiles, index=False) # création du fichier s'il n'existe pas
+if not os.path.exists(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_HASH"]): # Si le fichier n'existe pas
+    df_new.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_HASH"], index=False) # création du fichier s'il n'existe pas
 else : # si le fichier existe
     # Read existing data
-    df_existing = pd.read_excel(pathData + folderOpenData + hashFiles)
+    df_existing = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_HASH"])
     # Append new data
     df_combined = pd.concat([df_existing, df_new])
     # Save the combined data to Excel
-    df_combined.to_excel(pathData + folderOpenData + hashFiles, index=False)
+    df_combined.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_HASH"], index=False)
 """"""
 
 

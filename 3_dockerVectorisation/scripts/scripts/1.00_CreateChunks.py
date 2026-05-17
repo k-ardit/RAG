@@ -9,23 +9,9 @@ import hashlib
 import pickle
 
 
-"""Instanciation des variables de dossiers et fichiers
-pathData : dossier qui contient toutes les données
-folderOpenData : dossier qui contient les données téléchargées brutes (json), les hash historisé des données (hashFiles.xsls),
-                les données exportées néttoyées (fichierFinal.xlsx) et le rapport de test de téléchargement et de néttoyage (testExport.xlsx)
-donneeNettoyee : fichier avec les données néttoyées"""
-pathData = os.environ["PATHDATA"]
-folderOpenData = "opendata/"
-donneeNettoyee = "FichierFinal.xlsx"
-folderChunks = "chunks/"
-fileChunks = "chunks.xlsx"
-fileChunks2 = "chunks.pkl"
-""""""
-
-
 """Récupération des données
 data : Récupération des données néttoyées dans un format dataframe"""
-data = pd.read_excel(pathData + folderOpenData + donneeNettoyee, sheet_name="Sheet1")
+data = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"], sheet_name="Sheet1")
 """"""
 
 
@@ -107,7 +93,7 @@ dfFinal['rowHash'] = dfFinal.apply(lambda row: hashlib.md5(row.astype(str).str.c
 # On tri les lignes par hash (pour avoir le même positionnement que les index de fin)
 dfFinal = dfFinal.sort_values('rowHash')
 
-dfFinal.to_excel(pathData + folderChunks + fileChunks, index=False)
+dfFinal.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"], index=False)
 print("Fichier chunks.xlsx crée")
 
 
@@ -119,12 +105,10 @@ for idxc, row in dfFinal.iterrows():
         "metadata": {"metadata": row["metadata"]}
     }
     all_chunks.append(chunk_dict)
-# doc_counter += 1
-# logging.info(f"Total de {len(all_chunks)} chunks créés.")
-with open(pathData + folderChunks + fileChunks2, 'wb') as f:
+
+
+with open(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_PKL"], 'wb') as f:
                 pickle.dump(all_chunks, f)
-
-
 #dfFinal.to_pickle(pathData + folderChunks + fileChunks2)
 print("Fichier chunks.pkl crée")
 """"""

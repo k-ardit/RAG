@@ -14,25 +14,8 @@ from ragas.metrics import (
     context_recall,
 )
 
-"""Instanciation des variables de dossiers et fichiers
-pathData : dossier qui contient toutes les données
-folderOpenData : dossier qui contient les données téléchargées brutes (json), les hash historisé des données (hashFiles.xsls),
-                les données exportées néttoyées (fichierFinal.xlsx) et le rapport de test de téléchargement et de néttoyage (testExport.xlsx)
-donneeNettoyee : fichier avec les données néttoyées"""
-pathData = os.environ["PATHDATA"]
-folderOpenData = "opendata/"
-donneeNettoyee = "FichierFinal.xlsx"
-folderIndex = "index/"
-fileIndex = "faiss_index.idx"
-folderChunks = "chunks/"
-fileChunks = "chunks.xlsx"
-folderQuestion = "questionsTest/"
-fileQuestion = "QuestionTest.xlsx"
-folderRagas = "ragasTest/"
-fileRagas = "testRagas.xlsx"
-""""""
 
-dfQuestion = pd.read_excel(pathData + folderQuestion + fileQuestion)
+dfQuestion = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_REPONSE"] + os.environ["FILE_QUESTION"])
 
 questions_test = dfQuestion["Question"]
 
@@ -92,7 +75,7 @@ try:
     results_df = results.to_pandas()
 
     # Export des résultats sour format .xlsx
-    results_df.to_excel(pathData + folderRagas + fileRagas)
+    results_df.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_RAGASTEST"] + os.environ["FILE_RAGASTEST"])
 
     # 4. Affichage des résultats sous forme de DataFrame
     print("\n--- Résultats de l'évaluation (DataFrame) ---")
