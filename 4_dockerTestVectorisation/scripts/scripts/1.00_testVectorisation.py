@@ -19,26 +19,11 @@ pathVector="/data/Flow02/vector_db/"
 #pathQuestion = "C:\\Users\\ardit\\Desktop\\Projet_11\\data\\Flow02\\QuestionTest\\"
 pathQuestion="/data/Flow02/QuestionTest/"
 
-"""Instanciation des variables de dossiers et fichiers
-pathData : dossier qui contient toutes les données
-folderOpenData : dossier qui contient les données téléchargées brutes (json), les hash historisé des données (hashFiles.xsls),
-                les données exportées néttoyées (fichierFinal.xlsx) et le rapport de test de téléchargement et de néttoyage (testExport.xlsx)
-donneeNettoyee : fichier avec les données néttoyées"""
-pathData = os.environ["PATHDATA"]
-folderOpenData = "opendata/"
-donneeNettoyee = "FichierFinal.xlsx"
-folderIndex = "index/"
-fileIndex = "faiss_index.idx"
-folderChunks = "chunks/"
-fileChunks = "chunks.xlsx"
-folderQuestion = "questionsTest/"
-fileQuestion = "QuestionTest.xlsx"
-""""""
 
 index: Optional[faiss.Index] = None
 document_chunks: List[Dict[str, any]] = []
-FAISS_INDEX_FILE = pathData + folderIndex + fileIndex
-DOCUMENT_CHUNKS_FILE = pathData + folderChunks + fileChunks
+FAISS_INDEX_FILE = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_INDEX"]
+DOCUMENT_CHUNKS_FILE = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"]
 MISTRAL_API_KEY = os.environ["MISTRAL_API_KEY"]
 mistral_client = MistralClient(api_key=MISTRAL_API_KEY)
 
@@ -53,7 +38,7 @@ def _load_index_and_chunks():
             
             logging.info(f"Chargement des chunks depuis {DOCUMENT_CHUNKS_FILE}...")
             global document_chunks
-            document_chunks = pd.read_excel(pathData + folderChunks + fileChunks, sheet_name="Sheet1").to_dict(orient='records')
+            document_chunks = pd.read_excel(DOCUMENT_CHUNKS_FILE, sheet_name="Sheet1").to_dict(orient='records')
             
             logging.info(f"Index ({index.ntotal} vecteurs) et {len(document_chunks)} chunks chargés.")
             
@@ -183,7 +168,7 @@ def getScoreAndKForEachChunk(Question: str, idToFind: [], k: int = 200, min_scor
 
 _load_index_and_chunks()
 
-dfQuestions = pd.read_excel(pathData + folderQuestion + fileQuestion)
+dfQuestions = pd.read_excel(os.environ["PATHDATA"] + os.environ["FILE_QUESTION"])
 
 dfQuestionsFinal = dfQuestions.copy().astype(str)
 
@@ -192,6 +177,7 @@ for idxe, row in dfQuestions.iterrows():
     dfQuestionsFinal.loc[dfQuestionsFinal["Question"] == row["Question"], "identifiant/k"] = result.loc[result["Question"] == row["Question"], "identifiant/k"][0]
     dfQuestionsFinal.loc[dfQuestionsFinal["Question"] == row["Question"], "identifiant/score"] = result.loc[result["Question"] == row["Question"], "identifiant/score"][0]
     
-dfQuestionsFinal.to_excel(pathData + folderQuestion + fileQuestion, index=False)
+dfQuestionsFinal.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_TESTVECTORISATION"] + os.environ["FILE_QUESTION"], index=False)
 
 dfQuestionsFinal.head()
+

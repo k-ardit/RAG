@@ -8,16 +8,6 @@ from datetime import datetime, timedelta
 import os
 
 
-"""Instanciation des variables de fichiers
-pathData : dossier qui contient toutes les données
-folderOpenData : dossier qui contient les données téléchargées brutes (json), les hash historisé des données (hashFiles.xsls),
-                les données exportées néttoyées (fichierFinal.xlsx) et le rapport de test de téléchargement et de néttoyage (testExport.xlsx)"""
-pathData = os.environ["PATHDATA"]
-folderOpenData = "opendata/"
-file = "publicEvent.json"
-""""""
-
-
 """Téléchargement des données brutes via l'API opendatasoft
 firstBeginDate : Assignation de la date de départ voulue (aujourd'hui moins un an (365 jours, soit 8760 heures))
 zoneGeographique : Assignation de la zone géographique voulue (Nice)
@@ -31,7 +21,7 @@ response = requests.get("https://public.opendatasoft.com/api/explore/v2.1/catalo
 """Création du fichier json (publicEvent.json) avec les données téléchargés via l'API"""
 json_str = json.dumps(json.loads(response.content), indent=4)
 print("Nombre de caractères : " + str(len(json_str)))
-with open(pathData + folderOpenData + file, "w") as f: # Si le fichier existe
+with open(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_BRUT"], "w") as f:
     f.write(json_str)
 """"""
 

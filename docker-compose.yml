@@ -5,7 +5,9 @@ services:
       context: ./1_dockerExport
     volumes:
       - ./data:/data
-    env_file: .env
+    env_file: 
+      - .env
+      - .envFolder
     #command: sh -c "tail -f /dev/null"
 
   testexport:
@@ -13,7 +15,9 @@ services:
       context: ./2_dockerTestExport
     volumes:
       - ./data:/data
-    env_file: .env
+    env_file: 
+      - .env
+      - .envFolder
     #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   export:
@@ -24,7 +28,9 @@ services:
       context: ./3_dockerVectorisation
     volumes:
       - ./data:/data
-    env_file: .env
+    env_file: 
+      - .env
+      - .envFolder
     #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   testexport:
@@ -35,7 +41,9 @@ services:
       context: ./4_dockerTestVectorisation
     volumes:
       - ./data:/data
-    env_file: .env
+    env_file: 
+      - .env
+      - .envFolder
     #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   vectorisation:
@@ -46,7 +54,9 @@ services:
       context: ./5_dockerReponse
     volumes:
       - ./data:/data
-    env_file: .env
+    env_file: 
+      - .env
+      - .envFolder
     #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   testvectorisation:
@@ -57,7 +67,9 @@ services:
       context: ./6_dockerRagasTest
     volumes:
       - ./data:/data
-    env_file: .env
+    env_file: 
+      - .env
+      - .envFolder
     #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   reponse:
@@ -70,7 +82,9 @@ services:
       - ./data:/data
     ports:
       - 8501:8501
-    env_file: .env
+    env_file: 
+      - .env
+      - .envFolder
     #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   testragas:

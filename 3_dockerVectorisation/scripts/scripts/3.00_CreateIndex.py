@@ -6,20 +6,7 @@ import pandas as pd
 import ast
 
 
-"""Instanciation des variables de dossiers et fichiers
-pathData : dossier qui contient toutes les données
-folderOpenData : dossier qui contient les données téléchargées brutes (json), les hash historisé des données (hashFiles.xsls),
-                les données exportées néttoyées (fichierFinal.xlsx) et le rapport de test de téléchargement et de néttoyage (testExport.xlsx)
-donneeNettoyee : fichier avec les données néttoyées"""
-pathData = os.environ["PATHDATA"]
-folderVectors = "vectors/"
-folderIndex = "index/"
-fileVectors = "vectors.xlsx"
-fileIndex = "faiss_index.idx"
-""""""
-
-
-doneeVectorisee = pd.read_excel(pathData + folderVectors + fileVectors, sheet_name="Sheet1")
+doneeVectorisee = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"], sheet_name="Sheet1")
 # On tri les lignes par hash (pour avoir le même positionnement que les chunks de début)
 doneeVectorisee.sort_values('hash')
 
@@ -44,7 +31,7 @@ print(f"Index Faiss créé avec {index.ntotal} vecteurs.")
 
 try:
     print(f"Sauvegarde de l'index Faiss ...")
-    faiss.write_index(index, pathData + folderIndex + fileIndex)
+    faiss.write_index(index, os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_INDEX"])
     # print(f"Sauvegarde des chunks dans {DOCUMENT_CHUNKS_FILE}...")
     # with open(DOCUMENT_CHUNKS_FILE, 'wb') as f:
     #     pickle.dump(self.document_chunks, f)

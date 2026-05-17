@@ -16,27 +16,10 @@ import os
 from typing import List, Dict, Tuple, Optional
 
 
-
-pathData = os.environ["PATHDATA"]
-folderOpenData = "opendata/"
-donneeNettoyee = "FichierFinal.xlsx"
-folderIndex = "index/"
-fileIndex = "faiss_index.idx"
-folderChunks = "chunks/"
-fileChunks = "chunks.xlsx"
-folderQuestion = "questionsTest/"
-fileQuestion = "QuestionTest.xlsx"
-folderVectors = "vectors/"
-fileVectors = "vectors.xlsx"
-
-
-
-
 index: Optional[faiss.Index] = None
 document_chunks: List[Dict[str, any]] = []
-
-FAISS_INDEX_FILE = pathData + folderIndex + fileIndex
-DOCUMENT_CHUNKS_FILE = pathData + folderChunks + fileChunks
+FAISS_INDEX_FILE = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_INDEX"]
+DOCUMENT_CHUNKS_FILE = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"]
 k = 210
 min_score = 0.77
 MISTRAL_API_KEY = os.environ["MISTRAL_API_KEY"]
@@ -54,7 +37,7 @@ def _load_index_and_chunks():
             
             logging.info(f"Chargement des chunks depuis {DOCUMENT_CHUNKS_FILE}...")
             global document_chunks
-            document_chunks = pd.read_excel(pathData + folderChunks + fileChunks, sheet_name="Sheet1").to_dict(orient='records')
+            document_chunks = pd.read_excel(DOCUMENT_CHUNKS_FILE, sheet_name="Sheet1").to_dict(orient='records')
 
             logging.info(f"Index ({index.ntotal} vecteurs) et {len(document_chunks)} chunks chargés.")
             
@@ -194,7 +177,7 @@ def getAnswer(Question: str):
 
 _load_index_and_chunks()
 
-dfQuestions = pd.read_excel(pathData + folderQuestion + fileQuestion)
+dfQuestions = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_TESTVECTORISATION"] + os.environ["FILE_QUESTION"])
 
 dfQuestionsFinal = dfQuestions.copy()
 
@@ -217,6 +200,6 @@ for idxe, row in dfQuestions.iterrows():
     i = i+1
     print("Question " + str(i) + " effectué")
 
-dfQuestionsFinal.to_excel(pathData + folderQuestion + fileQuestion, index=False)
+dfQuestionsFinal.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_REPONSE"] + os.environ["FILE_QUESTION"], index=False)
 
 dfQuestionsFinal.head()
