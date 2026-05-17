@@ -100,6 +100,8 @@ if dfChunksToEmbed.shape[0] > 0:
 
     dfVectors = pd.concat([dfVectors, pd.DataFrame(all_hash_embeddings)], ignore_index=True)
     # On tri les lignes par hash (pour avoir le même positionnement que les index de fin)
-    dfVectors.sort_values('hash')
-    dfVectors.to_excel(pathData + folderVectors + fileVectors, index=False)
+
+
+dfVectors = dfVectors.sort_values('hash')
+dfVectors.to_excel(pathData + folderVectors + fileVectors, index=False)
 

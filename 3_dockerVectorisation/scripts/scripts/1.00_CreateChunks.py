@@ -6,6 +6,7 @@ import json
 from datetime import datetime
 import os
 import hashlib
+import pickle
 
 
 """Instanciation des variables de dossiers et fichiers
@@ -103,10 +104,27 @@ dfFinal["metadata"] = "[{ motsCles : " + data["keywords_fr"].astype(str) + "},{ 
 dfFinal["model"] = os.environ["MODEL_EMBEDDING"]
 dfFinal['rowHash'] = dfFinal.apply(lambda row: hashlib.md5(row.astype(str).str.cat(sep='|').encode()).hexdigest(),axis=1
 )
-# On tri les lignes par hash (pour avoir le même positionnement que les indexde fin)
-dfFinal.sort_values('rowHash')
+# On tri les lignes par hash (pour avoir le même positionnement que les index de fin)
+dfFinal = dfFinal.sort_values('rowHash')
+
 dfFinal.to_excel(pathData + folderChunks + fileChunks, index=False)
 print("Fichier chunks.xlsx crée")
-dfFinal.to_pickle(pathData + folderChunks + fileChunks2, index=False)
+
+
+all_chunks = []
+for idxc, row in dfFinal.iterrows():
+    chunk_dict = {
+        "id": row["id"], # Identifiant unique du chunk (doc_index_chunk_index)
+        "text": row["text"],
+        "metadata": {"metadata": row["metadata"]}
+    }
+    all_chunks.append(chunk_dict)
+# doc_counter += 1
+# logging.info(f"Total de {len(all_chunks)} chunks créés.")
+with open(pathData + folderChunks + fileChunks2, 'wb') as f:
+                pickle.dump(all_chunks, f)
+
+
+#dfFinal.to_pickle(pathData + folderChunks + fileChunks2)
 print("Fichier chunks.pkl crée")
 """"""

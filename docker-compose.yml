@@ -6,6 +6,7 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
+    #command: sh -c "tail -f /dev/null"
 
   testexport:
     build:
@@ -13,7 +14,7 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    command: sh -c "tail -f /dev/null"
+    #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   export:
     #     condition: service_completed_successfully
@@ -24,7 +25,7 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    command: sh -c "tail -f /dev/null"
+    #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   testexport:
     #     condition: service_completed_successfully
@@ -35,7 +36,7 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    command: sh -c "tail -f /dev/null"
+    #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   vectorisation:
     #     condition: service_completed_successfully
@@ -46,7 +47,7 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    command: sh -c "tail -f /dev/null"
+    #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   testvectorisation:
     #     condition: service_completed_successfully
@@ -57,8 +58,21 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    command: sh -c "tail -f /dev/null"
+    #command: sh -c "tail -f /dev/null"
     # depends_on:
     #   reponse:
+    #     condition: service_completed_successfully
+
+  chatbot:
+    build:
+      context: ./7_dockerChatBot
+    volumes:
+      - ./data:/data
+    ports:
+      - 8501:8501
+    env_file: .env
+    #command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   testragas:
     #     condition: service_completed_successfully
 
