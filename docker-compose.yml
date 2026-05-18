@@ -5,20 +5,22 @@ services:
       context: ./1_dockerExport
     volumes:
       - ./data:/data
+      - ./1_dockerExport/scripts:/scripts
     env_file: 
       - .env
       - .envFolder
-    #command: sh -c "tail -f /dev/null"
+    command: sh -c "tail -f /dev/null"
 
   testexport:
     build:
       context: ./2_dockerTestExport
     volumes:
       - ./data:/data
+      - ./2_dockerTestExport/scripts:/scripts
     env_file: 
       - .env
       - .envFolder
-    #command: sh -c "tail -f /dev/null"
+    command: sh -c "tail -f /dev/null"
     # depends_on:
     #   export:
     #     condition: service_completed_successfully
@@ -28,10 +30,11 @@ services:
       context: ./3_dockerVectorisation
     volumes:
       - ./data:/data
+      - ./3_dockerVectorisation/scripts:/scripts
     env_file: 
       - .env
       - .envFolder
-    #command: sh -c "tail -f /dev/null"
+    command: sh -c "tail -f /dev/null"
     # depends_on:
     #   testexport:
     #     condition: service_completed_successfully
@@ -41,10 +44,11 @@ services:
       context: ./4_dockerTestVectorisation
     volumes:
       - ./data:/data
+      - ./4_dockerTestVectorisation/scripts:/scripts
     env_file: 
       - .env
       - .envFolder
-    #command: sh -c "tail -f /dev/null"
+    command: sh -c "tail -f /dev/null"
     # depends_on:
     #   vectorisation:
     #     condition: service_completed_successfully
@@ -54,10 +58,11 @@ services:
       context: ./5_dockerReponse
     volumes:
       - ./data:/data
+      - ./5_dockerReponse/scripts:/scripts
     env_file: 
       - .env
       - .envFolder
-    #command: sh -c "tail -f /dev/null"
+    command: sh -c "tail -f /dev/null"
     # depends_on:
     #   testvectorisation:
     #     condition: service_completed_successfully
@@ -67,10 +72,11 @@ services:
       context: ./6_dockerRagasTest
     volumes:
       - ./data:/data
+      - ./6_dockerRagasTest/scripts:/scripts
     env_file: 
       - .env
       - .envFolder
-    #command: sh -c "tail -f /dev/null"
+    command: sh -c "tail -f /dev/null"
     # depends_on:
     #   reponse:
     #     condition: service_completed_successfully
@@ -80,12 +86,13 @@ services:
       context: ./7_dockerChatBot
     volumes:
       - ./data:/data
+      - ./7_dockerChatBot/scripts:/scripts
     ports:
       - 8501:8501
     env_file: 
       - .env
       - .envFolder
-    #command: sh -c "tail -f /dev/null"
+    command: sh -c "tail -f /dev/null"
     # depends_on:
     #   testragas:
     #     condition: service_completed_successfully

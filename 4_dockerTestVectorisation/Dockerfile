@@ -4,7 +4,7 @@ FROM ubuntu:jammy
 WORKDIR /·
 
 # copie des fichiers nécessaires
-COPY /scripts /scripts
+# COPY /scripts /scripts
 COPY /requirements.txt /requirements/requirements.txt
 
 # On met à jour les dépendances système afin de limiter les risques 
