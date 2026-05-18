@@ -15,6 +15,10 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 """"""
 
 
+"""Configuration des logs"""
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+""""""
+
 """Instanciation des paramètres de base de données DuckDB
 database : base de donnée utilisée
 table : table crée pour insérer les données brutes"""
