@@ -9,82 +9,104 @@ from typing import List, Dict, Tuple, Optional
 from mistralai.client import MistralClient
 from mistralai.exceptions import MistralAPIException
 from langchain.text_splitter import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
-from langchain_core.documents import Document # Utilisé pour le format attendu par le splitter
+from langchain_core.documents import Document
 import pandas as pd
 import json
 import os.path
 
 
-"""Récupération des données
-data : Récupération des données néttoyées dans un format dataframe"""
-data = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"], sheet_name="Sheet1").astype(str)
-dataChunk = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"], sheet_name="Sheet1").astype(str)
-if os.path.exists(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"]):
-    dfVectors = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"], sheet_name="Sheet1").astype(str)
-else:
-     dfVectors = pd.DataFrame(columns=["hash", "vectors"]) # Création d'un dataframe vide avec uniquement la colonnne utilisée par la suite
+"""Configuration des logs"""
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 """"""
 
 
-# On garde les vecteurs déja existants
+"""Récupération des données
+data : Récupération des données néttoyées dans un format dataframe"""
+filePathNettoye = os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"]
+filePathChunks = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"]
+filePathVectors = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"]
+
+logging.info(f"Lecture du fichier de données nettoyées : {filePathNettoye}")
+data = pd.read_excel(filePathNettoye, sheet_name="Sheet1").astype(str)
+logging.info(f"Données nettoyées chargées - nombre de lignes : {len(data)}")
+
+logging.info(f"Lecture du fichier de chunks : {filePathChunks}")
+dataChunk = pd.read_excel(filePathChunks, sheet_name="Sheet1").astype(str)
+logging.info(f"Chunks chargés - nombre de lignes : {len(dataChunk)}")
+
+if os.path.exists(filePathVectors):
+    logging.info(f"Fichier de vecteurs existant, chargement : {filePathVectors}")
+    dfVectors = pd.read_excel(filePathVectors, sheet_name="Sheet1").astype(str)
+    logging.info(f"Vecteurs chargés - nombre de lignes : {len(dfVectors)}")
+else:
+    logging.warning(f"Fichier de vecteurs inexistant, création d'un dataframe vide : {filePathVectors}")
+    dfVectors = pd.DataFrame(columns=["hash", "vectors"])
+""""""
+
+
+# On garde les vecteurs déjà existants
 dfVectors = dfVectors[dfVectors['hash'].isin(dataChunk['rowHash'])]
-print("nombre de vecteurs déjà existants : " + str(dfVectors.shape[0]))
+logging.info(f"Nombre de vecteurs déjà existants : {dfVectors.shape[0]}")
 
 
-# On récupère les chunk à vectoriser
+# On récupère les chunks à vectoriser
 dfChunksToEmbed = dataChunk[~dataChunk['rowHash'].isin(dfVectors['hash'])]
-print("nombre de chunks à vectoriser : " + str(dfChunksToEmbed.shape[0]))
+logging.info(f"Nombre de chunks à vectoriser : {dfChunksToEmbed.shape[0]}")
 
 
 # On vectorise les chunks
 if dfChunksToEmbed.shape[0] > 0:
     mistral_client = MistralClient(api_key=os.environ["MISTRAL_API_KEY"])
     model_embedding = os.environ["MODEL_EMBEDDING"]
-    EMBEDDING_BATCH_SIZE = int(os.environ["EMBEDDING_BATCH_SIZE"]) # Taille des lots pour l'API d'embedding
+    EMBEDDING_BATCH_SIZE = int(os.environ["EMBEDDING_BATCH_SIZE"])
     total_batches = (dfChunksToEmbed.shape[0] + EMBEDDING_BATCH_SIZE - 1) // EMBEDDING_BATCH_SIZE
-    #all_embeddings = []
+
     all_hash_embeddings = []
-    print(f"Génération des embeddings pour {dfChunksToEmbed.shape[0]} chunks (modèle: {model_embedding})...")
-    print("batch size = " + str(EMBEDDING_BATCH_SIZE))
-    print("\n")
+    logging.info(f"Génération des embeddings pour {dfChunksToEmbed.shape[0]} chunks - modèle : {model_embedding}, batch size : {EMBEDDING_BATCH_SIZE}, nombre de lots : {total_batches}")
+
     j = 0
     for i in range(0, dfChunksToEmbed.shape[0], EMBEDDING_BATCH_SIZE):
         batch_num = (i // EMBEDDING_BATCH_SIZE) + 1
         batch_chunks = dfChunksToEmbed[i:i + EMBEDDING_BATCH_SIZE]
-        # print(dfChunksToEmbed["text"].tolist())
-    
-        texts_to_embed = dfChunksToEmbed[i:i + EMBEDDING_BATCH_SIZE]["text"].tolist() # [chunk["text"] for chunk in batch_chunks]
+
+        texts_to_embed = dfChunksToEmbed[i:i + EMBEDDING_BATCH_SIZE]["text"].tolist()
         hashToAdd = dfChunksToEmbed[i:i + EMBEDDING_BATCH_SIZE]["rowHash"]
-        print("\n")
-        print(f"Traitement du lot {batch_num}/{total_batches} ({len(texts_to_embed)} chunks)")
-    
+        logging.info(f"Traitement du lot {batch_num}/{total_batches} ({len(texts_to_embed)} chunks)")
+
         try:
             response = mistral_client.embeddings(
                 model=model_embedding,
                 input=texts_to_embed
             )
             batch_embeddings = [data.embedding for data in response.data]
-            #all_embeddings.extend(batch_embeddings)
             for hash_val, vector in zip(hashToAdd, batch_embeddings):
                 all_hash_embeddings.append({
                     'hash': hash_val,
                     'vectors': vector
                 })
-                j = j+1
-                print("ligne " + str(j) + " vectorisé : " + hash_val)
+                j = j + 1
+                logging.info(f"Ligne {j}/{dfChunksToEmbed.shape[0]} vectorisée - hash : {hash_val}")
+
         except MistralAPIException as e:
-            logging.error(f"Erreur API Mistral lors de la génération d'embeddings (lot {batch_num}): {e}")
-            logging.error(f"  Détails: Status Code='', Message={e.message}")
+            logging.error(f"Erreur API Mistral lors de la génération d'embeddings (lot {batch_num}/{total_batches}) : {e}")
+            logging.error(f"Détails : Message={e.message}")
         except Exception as e:
-            logging.error(f"Erreur inattendue lors de la génération d'embeddings (lot {batch_num}): {e}")
+            logging.error(f"Erreur inattendue lors de la génération d'embeddings (lot {batch_num}/{total_batches}) : {e}")
 
     if not all_hash_embeddings:
-        print("Aucun embedding généré.")
+        logging.warning("Aucun embedding généré")
+    else:
+        logging.info(f"Embeddings générés avec succès - nombre total : {len(all_hash_embeddings)}")
 
     dfVectors = pd.concat([dfVectors, pd.DataFrame(all_hash_embeddings)], ignore_index=True)
-    # On tri les lignes par hash (pour avoir le même positionnement que les index de fin)
+    logging.info(f"Nouveaux vecteurs ajoutés - nombre total de vecteurs : {len(dfVectors)}")
+else:
+    logging.info("Aucun chunk à vectoriser, tous les vecteurs sont déjà à jour")
 
 
+logging.info("Tri des vecteurs par hash")
 dfVectors = dfVectors.sort_values('hash')
-dfVectors.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"], index=False)
 
+logging.info(f"Écriture du fichier de vecteurs : {filePathVectors}")
+dfVectors.to_excel(filePathVectors, index=False)
+logging.info(f"Fichier de vecteurs sauvegardé avec succès - nombre de lignes : {len(dfVectors)}")

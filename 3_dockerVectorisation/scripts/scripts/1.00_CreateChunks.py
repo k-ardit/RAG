@@ -7,11 +7,20 @@ from datetime import datetime
 import os
 import hashlib
 import pickle
+import logging
+
+
+"""Configuration des logs"""
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+""""""
 
 
 """Récupération des données
 data : Récupération des données néttoyées dans un format dataframe"""
-data = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"], sheet_name="Sheet1")
+filePathNettoye = os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"]
+logging.info(f"Lecture du fichier de données nettoyées : {filePathNettoye}")
+data = pd.read_excel(filePathNettoye, sheet_name="Sheet1")
+logging.info(f"Données nettoyées chargées - nombre de lignes : {len(data)}")
 """"""
 
 
@@ -59,56 +68,68 @@ def duplicateAndRemoveEvent(dfVar: pd.DataFrame):
                 dfToReturn.loc[len(dfToReturn) - 1, "uid"] = str(row["uid"]) + "-" + str(i)
         elif len(row["datesEvenement"].split(", ")) <= 1:
             dfToReturn.loc[len(dfToReturn)] = row
-            #dfToReturn = pd.concat([dfToReturn.astype(str), pd.DataFrame([row])], ignore_index=True)
     return dfToReturn
 
 
-"""Ajout/modification des données utiles pour le RAG
-- Renommage des colonnes longdescription_fr et conditions_fr
-- Création de la colonne "adresse" (concaténation de la colonne location_name et location_address)
-- Création de la colonne datesEvenement
-- Création de la colonne dureeEvenement
-- Duplication et suppression de certaines lignes qui ont plusieurs fois le même évènement, multidatés  (func duplicateAndRemoveEvent)
-- Insertion de la valeur "none" dans toutes les cellules vides"""
+"""Ajout/modification des données utiles pour le RAG"""
+logging.info("Renommage des colonnes longdescription_fr et conditions_fr")
 data = data.rename(columns={"longdescription_fr": "description", "conditions_fr": "conditions"})
+
+logging.info("Création de la colonne adresse")
 data["addresse"] = data["location_name"] + ", " + data["location_address"]
+
+logging.info("Création de la colonne datesEvenement")
 data["datesEvenement"] = data["timings"].apply(getBegin)
+
+logging.info("Création de la colonne dureeEvenement")
 data["dureeEvenement"] = data["timings"].apply(getDuree)
 
+logging.info("Remplacement des valeurs vides par 'none'")
 pd.set_option('future.no_silent_downcasting', True)
 data = data.fillna("none")
 
+nbLignesAvant = len(data)
+logging.info(f"Duplication des lignes multi-datées - nombre de lignes avant : {nbLignesAvant}")
 data = duplicateAndRemoveEvent(data)
+logging.info(f"Duplication terminée - nombre de lignes après : {len(data)} ({len(data) - nbLignesAvant} lignes ajoutées)")
 """"""
 
 
 """Création du fichier prêt pour le chunking des données"""
+logging.info("Construction du dataframe final pour le chunking")
 dfFinal = pd.DataFrame({})
 dfFinal["id"] = data["uid"]
 dfFinal["text"] = "<h1>Description de l'évènement : </h1>" + data["description"].astype(str) + "<h1>Informations supplémentaires : </h1><p>- Les conditions sont les suivantes : " + data["conditions"].astype(str) + "<br>- L'évènement se déroule à l'adresse suivante : " + data["addresse"].astype(str) + "<br>- L'évènement aura lieu à la date suivante : " + data["datesEvenement"].astype(str) + "<br>- l'évènement durera : " + data["dureeEvenement"].astype(str) + "</p>"
 dfFinal["metadata"] = "[{ motsCles : " + data["keywords_fr"].astype(str) + "},{ accessibilite : " + data["accessibility_label_fr"].astype(str) + "},{ coordonnees : " + data["location_coordinates"].astype(str) + "},{ telephone : " + data["location_phone"].astype(str) + "},{ site_web : " + data["location_website"].astype(str) + "}]"
 dfFinal["model"] = os.environ["MODEL_EMBEDDING"]
-dfFinal['rowHash'] = dfFinal.apply(lambda row: hashlib.md5(row.astype(str).str.cat(sep='|').encode()).hexdigest(),axis=1
-)
-# On tri les lignes par hash (pour avoir le même positionnement que les index de fin)
+
+logging.info("Calcul du hash par ligne")
+dfFinal['rowHash'] = dfFinal.apply(lambda row: hashlib.md5(row.astype(str).str.cat(sep='|').encode()).hexdigest(), axis=1)
+
+logging.info("Tri des lignes par hash")
 dfFinal = dfFinal.sort_values('rowHash')
+logging.info(f"Dataframe final prêt - nombre de lignes : {len(dfFinal)}")
 
-dfFinal.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"], index=False)
-print("Fichier chunks.xlsx crée")
+filePathChunksXlsx = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"]
+logging.info(f"Écriture du fichier chunks Excel : {filePathChunksXlsx}")
+dfFinal.to_excel(filePathChunksXlsx, index=False)
+logging.info("Fichier chunks.xlsx créé avec succès")
 
 
+logging.info("Construction de la liste de chunks pour le fichier pickle")
 all_chunks = []
 for idxc, row in dfFinal.iterrows():
     chunk_dict = {
-        "id": row["id"], # Identifiant unique du chunk (doc_index_chunk_index)
+        "id": row["id"],
         "text": row["text"],
         "metadata": {"metadata": row["metadata"]}
     }
     all_chunks.append(chunk_dict)
+logging.info(f"Nombre de chunks construits : {len(all_chunks)}")
 
-
-with open(os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_PKL"], 'wb') as f:
-                pickle.dump(all_chunks, f)
-#dfFinal.to_pickle(pathData + folderChunks + fileChunks2)
-print("Fichier chunks.pkl crée")
+filePathChunksPkl = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_PKL"]
+logging.info(f"Écriture du fichier chunks pickle : {filePathChunksPkl}")
+with open(filePathChunksPkl, 'wb') as f:
+    pickle.dump(all_chunks, f)
+logging.info("Fichier chunks.pkl créé avec succès")
 """"""
