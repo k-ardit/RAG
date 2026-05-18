@@ -15,7 +15,7 @@ FILE_VECTORS=vectors.xlsx
 FILE_INDEX=faiss_index.idx
 
 FOLDER_TESTVECTORISATION=04_testVectorisation/
-FOLDER_REPONSE=05_Reponse/
+FOLDER_REPONSE=05_reponse/
 FILE_QUESTION=QuestionTest.xlsx
 
 FOLDER_RAGASTEST=06_testRagas/
