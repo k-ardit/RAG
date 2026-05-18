@@ -1,3 +1,15 @@
+"""
+Ce script permet d'effectuer un test avec la librairie Ragas.
+Ce test nous renvoie le résultat des métriques qu'on souhaite.
+Il nous faut 
+    - la liste des métriques (dans notre cas : faithfulness, context_precision, context_recall)
+    - la liste des questions
+    - la liste des réponses voulue
+    - la liste des réponses obtenues via Mistral
+    - la liste des chunks (contextes) utilisé par Mistral
+"""
+
+
 import os
 import traceback
 import pandas as pd

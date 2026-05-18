@@ -29,9 +29,7 @@ logging.info("Connexion à DuckDB réussie")
 """"""
 
 
-"""Insertion des données brutes dans la table nettoyee
-1 : Suppréssion de la table nettoyee si elle existe
-2 : Création et insertion des données dans la table nettoyee"""
+"""Insertion des données brutes dans la table {database}.{tableNettoyee}"""
 logging.info(f"Suppression de la table {database}.{tableNettoyee} si elle existe")
 conn.sql("DROP TABLE IF EXISTS "+ database + "." + tableNettoyee)
 
@@ -41,7 +39,7 @@ logging.info(f"Table {database}.{tableNettoyee} créée avec succès")
 """"""
 
 
-"""Nettoyage de la table nettoyee 
+"""Nettoyage de la table {database}.{tableNettoyee} 
 1 : Suppression des colonnes vides (avec affichage des informations de suppression)"""
 nbColAvant = conn.sql("SELECT column_count FROM duckdb_tables() WHERE table_name like '"+ tableNettoyee +"';").df().iloc[0].values[0]
 logging.info(f"Nombre de colonnes avant suppression des colonnes vides : {nbColAvant}")
@@ -59,7 +57,7 @@ logging.info(f"Nombre de colonnes après suppression des colonnes vides : {nbCol
 """"""
 
 
-"""Nettoyage de la table nettoyee 
+"""Nettoyage de la table {database}.{tableNettoyee} 
 1 : Suppréssion des lignes qui n'ont pas d'id (uid null)"""
 nbLignesAvant = conn.sql("SELECT COUNT(*) FROM " + database + "." + tableNettoyee + ";").df().iloc[0].values[0]
 logging.info(f"Nombre de lignes avant suppression des uid null : {nbLignesAvant}")
@@ -71,7 +69,7 @@ logging.info(f"Nombre de lignes après suppression des uid null : {nbLignesApres
 """"""
 
 
-"""Nettoyage de la table nettoyee 
+"""Nettoyage de la table {database}.{tableNettoyee} 
 1 : Suppréssion des doublons selon le uid"""
 nbLignesAvant = conn.sql("SELECT COUNT(*) FROM " + database + "." + tableNettoyee + ";").df().iloc[0].values[0]
 logging.info(f"Nombre de lignes avant suppression des doublons : {nbLignesAvant}")

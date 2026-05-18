@@ -1,3 +1,9 @@
+"""
+Ce script permet de créer les index avec les vecteurs crée à l'étape précédente.
+Au final, un fichier faiss_index.idx est crée.
+"""
+
+
 # utils/vector_store.py
 import os
 import faiss
@@ -18,7 +24,7 @@ doneeVectorisee = pd.read_excel(filePathVectors, sheet_name="Sheet1")
 logging.info(f"Vecteurs chargés - nombre de lignes : {len(doneeVectorisee)}")
 
 logging.info("Tri des vecteurs par hash")
-doneeVectorisee.sort_values('hash')
+doneeVectorisee = doneeVectorisee.sort_values('hash')
 
 logging.info("Conversion des vecteurs en numpy arrays float32")
 all_embeddings = []

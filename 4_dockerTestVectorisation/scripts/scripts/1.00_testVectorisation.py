@@ -1,3 +1,14 @@
+"""
+Ce script permet de testet la vectorisation en effectuant un test.
+Au préalable, le fichier QuestionTest.xlsx situé dans le dossier /data/ doit être remplie.
+Une liste de question, ainsi q'une liste de réponses et une liste d'identifiants (en fonction des données contenues dans
+le fichier chunks.xlsx) doivent être renseignés dans ce fichier.
+Le test consiste à voir si on arrive à récupérer les bons identifiant par question, et à récupérer les paramètres k et min_score
+pour la suite.
+Au final, le fichier Question.xlsx est remplie et crée dans le dossier /data/04_testVectorisation/
+"""
+
+
 import faiss
 import pickle
 import logging

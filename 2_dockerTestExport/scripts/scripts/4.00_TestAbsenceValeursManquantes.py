@@ -1,4 +1,5 @@
-"""Ce script permet de ..."""
+"""Ce script permet de vérifier que les données néttoyées dans le conteneur précédent n'ont pas de colonnes vides (fichierFinal.xlsx), il
+crée un warning pour les colonnes qui ont au moins une valeur null."""
 
 
 import pandas as pd
