@@ -1,4 +1,5 @@
-"""Ce script permet de ..."""
+"""Ce script permet de récupérer les information de l'export en cours pour la suite des tests (instanciation de la table
+de resultat, insertion du hash et de l'idExport du dernier export"""
 
 
 import pandas as pd

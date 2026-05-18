@@ -1,4 +1,4 @@
-"""Ce script permet de ..."""
+"""Ce script permet de vérifier que les données néttoyées sont toutes dans la zone géographique voulue et dans l'année écoulée"""
 
 
 from datetime import datetime, timedelta

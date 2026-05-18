@@ -1,3 +1,11 @@
+"""
+Ce script permet de vectoriser les chunks crée à l'étape précédente,les chunks déjà vectorisé sont récupéré pour éviter 
+une vectorisation innutile via Mistral.
+Un tri par hash est ensuite effectué pour garder une cohérence entre tout les fichiers (chunks.xlsx, chunks.pkl, vectors.xlsx, faiss_index.idx).
+Au final, un fichier vectors.xlsx est crée.
+"""
+
+
 # utils/vector_store.py
 import hashlib
 import os
@@ -21,7 +29,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 
 
 """Récupération des données
-data : Récupération des données néttoyées dans un format dataframe"""
+data : Récupération des données dans un format dataframe"""
 filePathNettoye = os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"]
 filePathChunks = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"]
 filePathVectors = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"]

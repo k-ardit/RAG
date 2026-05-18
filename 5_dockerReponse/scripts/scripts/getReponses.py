@@ -1,4 +1,12 @@
-# app.py
+"""
+Ce script permet de récupérer les réponses des questions via Mistral.
+Le test consiste à poser une question a Mistral (envoie de la question et des k chunks séléctionné à Mistral
+avec un prompt adapté pour pouvoir extraire les identifiants des chunks que Mistral utilise pour la réponse, et comparaison des
+identifiants des chunks que Mistral à utilisé avec les chunks qu'il aurait du utilisé)
+Au final, le fichier Question.xlsx est remplie et crée dans le dossier /data/05_reponse/
+"""
+
+
 import streamlit as st
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage

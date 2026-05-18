@@ -1,4 +1,11 @@
-"""Ce script permet de ..."""
+"""
+Ce script permet de créer les chunks qui seront utilisés pour la vectorisation dans le script suivant.
+dans notre cas, il y'a un chunk par ligne Excel car il n'y a pas de liens sémantiques entre les lignes Excel (pas d'overload).
+Une selection et une modification des données est faite pour les besoins du RAG.
+Au final, deux fichiers sont crées, un fichier .xlsx pour le test du RAG et un fichier .pkl pour une utilisation
+avec le chatbot du conteneur 7.
+Les chunks sont trié par hash pour garder une cohérence entre tout les fichiers (chunks.xlsx, chunks.pkl, vectors.xlsx, faiss_index.idx)
+"""
 
 
 import pandas as pd
@@ -127,6 +134,8 @@ for idxc, row in dfFinal.iterrows():
     all_chunks.append(chunk_dict)
 logging.info(f"Nombre de chunks construits : {len(all_chunks)}")
 
+
+# Création d'un fichier .pkl pour une utilisation avec le chatbot dans le conteneur 7
 filePathChunksPkl = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_PKL"]
 logging.info(f"Écriture du fichier chunks pickle : {filePathChunksPkl}")
 with open(filePathChunksPkl, 'wb') as f:

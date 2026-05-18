@@ -1,4 +1,4 @@
-"""Ce script permet de ..."""
+"""Ce script permet d'exporter les résultats du test dans un fichier .xlsx (testExport.xlsx)"""
 
 
 import pandas as pd
