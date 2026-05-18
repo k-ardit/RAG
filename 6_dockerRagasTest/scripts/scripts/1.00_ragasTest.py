@@ -13,86 +13,96 @@ from ragas.metrics import (
     context_precision,
     context_recall,
 )
+import logging
 
 
-dfQuestion = pd.read_excel(os.environ["PATHDATA"] + os.environ["FOLDER_REPONSE"] + os.environ["FILE_QUESTION"])
+"""Configuration des logs"""
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+""""""
+
+
+filePathQuestions = os.environ["PATHDATA"] + os.environ["FOLDER_REPONSE"] + os.environ["FILE_QUESTION"]
+logging.info(f"Lecture du fichier de questions/réponses : {filePathQuestions}")
+dfQuestion = pd.read_excel(filePathQuestions)
+logging.info(f"Données chargées - nombre de questions : {len(dfQuestion)}")
 
 questions_test = dfQuestion["Question"]
-
 answers = dfQuestion["Reponse"]
+ground_truths = dfQuestion["ReponseAttendue"]
+logging.info("Colonnes questions, réponses et vérités terrain récupérées")
 
-ground_truths = dfQuestion["ReponseAttendue"] 
-
+logging.info("Construction des contextes pour Ragas")
 placeholder_contexts = []
 for val in dfQuestion["ContextList"]:
     myTab = []
     myTab.append(val)
     placeholder_contexts.append(myTab)
-# placeholder_contexts = dfQuestion["ContextList"]
+logging.info(f"Contextes construits - nombre de contextes : {len(placeholder_contexts)}")
 
-# Création du dictionnaire pour le Dataset
 evaluation_data = {
     "question": questions_test,
     "answer": answers,
     "contexts": placeholder_contexts,
-    "ground_truth": ground_truths, # Inclusion de la vérité terrain
+    "ground_truth": ground_truths,
 }
-    
-# Créer l'objet Dataset
+
+logging.info("Création du dataset Ragas")
 evaluation_dataset = Dataset.from_dict(evaluation_data)
-print("\n--- Aperçu du Dataset formaté pour Ragas ---")
+logging.info(f"Dataset Ragas créé - aperçu : {evaluation_dataset}")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    logging.warning("OPENAI_API_KEY non trouvée dans les variables d'environnement")
+else:
+    logging.info("OPENAI_API_KEY chargée avec succès")
 
 try:
-
+    logging.info("Initialisation du LLM (gpt-4o) et des embeddings OpenAI")
     llm2 = ChatOpenAI(model="gpt-4o")
     openai_client = openai.OpenAI()
     embeddings2 = OpenAIEmbeddings(client=openai_client)
+    logging.info("LLM et embeddings initialisés avec succès")
 
-    print("LLM et Embeddings initialisés.")
-    
     # 2. Définition des métriques à calculer
     metrics_to_evaluate = [
-        faithfulness,       # Génération: fidèle au contexte ?
-        #answer_relevancy,   # Génération: réponse pertinente à la question ?
-        context_precision,  # Récupération: contexte précis (peu de bruit) ?
-        context_recall,     # Récupération: infos clés récupérées (nécessite ground_truth) ?
+        faithfulness,
+        #answer_relevancy,
+        context_precision,
+        context_recall,
     ]
-    print(f"Métriques sélectionnées: {[m.name for m in metrics_to_evaluate]}")
+    logging.info(f"Métriques sélectionnées : {[m.name for m in metrics_to_evaluate]}")
 
     # 3. Lancement de l'évaluation Ragas
-    print("\nLancement de l'évaluation Ragas (peut prendre du temps)...")
+    logging.info("Lancement de l'évaluation Ragas (peut prendre du temps)...")
     results = evaluate(
         dataset=evaluation_dataset,
         metrics=metrics_to_evaluate,
-        llm=llm2, # LLM pour juger certaines métriques
-        embeddings=embeddings2 # Embeddings pour juger d'autres métriques
+        llm=llm2,
+        embeddings=embeddings2
     )
-    print("\n--- Évaluation Ragas terminée ---")
+    logging.info("Évaluation Ragas terminée avec succès")
 
     # Conversion du résultat en dataframe
     results_df = results.to_pandas()
+    logging.info(f"Résultats convertis en DataFrame - nombre de lignes : {len(results_df)}")
 
-    # Export des résultats sour format .xlsx
-    results_df.to_excel(os.environ["PATHDATA"] + os.environ["FOLDER_RAGASTEST"] + os.environ["FILE_RAGASTEST"])
+    # Export des résultats sous format .xlsx
+    filePathRagas = os.environ["PATHDATA"] + os.environ["FOLDER_RAGASTEST"] + os.environ["FILE_RAGASTEST"]
+    logging.info(f"Export des résultats Ragas : {filePathRagas}")
+    results_df.to_excel(filePathRagas)
+    logging.info("Fichier de résultats Ragas sauvegardé avec succès")
 
     # 4. Affichage des résultats sous forme de DataFrame
-    print("\n--- Résultats de l'évaluation (DataFrame) ---")
-    
-    # Paramétrage d'affichage
     pd.set_option('display.max_rows', None)
-    pd.set_option('display.max_columns', None)
+    pd.set_option('display.max_columns', 4)
     pd.set_option('display.width', 1000)
-    pd.set_option('display.max_colwidth', 150) # Ajustez si nécessaire
-    print(results_df)
+    pd.set_option('display.max_colwidth', 150)
+    #logging.info(f"Résultats de l'évaluation :\n{results_df.to_string()}")
 
     # 5. Calcul et affichage des scores moyens
-    print("\n--- Scores Moyens (sur tout le dataset) ---")
     average_scores = results_df.mean(numeric_only=True)
-    print(average_scores)
-except Exception as e:
-    print(f"\n❌ ERREUR lors de l'initialisation ou de l'évaluation Ragas : {e}")
-    print("\nTraceback:")
-    traceback.print_exc()
+    logging.info(f"Scores moyens sur l'ensemble du dataset :\n{average_scores.to_string()}")
 
+except Exception as e:
+    logging.error(f"Erreur lors de l'initialisation ou de l'évaluation Ragas : {e}")
+    logging.error(f"Traceback :\n{traceback.format_exc()}")
