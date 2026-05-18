@@ -7,7 +7,12 @@ import pandas as pd
 import duckdb
 from datetime import datetime
 import os
+import logging
 
+
+"""Configuration des logs"""
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+""""""
 
 """Instanciation des paramètres de base de données DuckDB
 database : base de donnée utilisée
