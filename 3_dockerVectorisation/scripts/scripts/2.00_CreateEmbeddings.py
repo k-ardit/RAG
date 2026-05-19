@@ -28,8 +28,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 """"""
 
 
-"""Récupération des données
-data : Récupération des données dans un format dataframe"""
+"""Récupération des données"""
 filePathNettoye = os.environ["PATHDATA"] + os.environ["FOLDER_EXPORT"] + os.environ["FILE_EXPORT_NETTOYE"]
 filePathChunks = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_CHUNKS_XLSX"]
 filePathVectors = os.environ["PATHDATA"] + os.environ["FOLDER_VECTORISATION"] + os.environ["FILE_VECTORS"]

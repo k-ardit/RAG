@@ -226,19 +226,21 @@ data/
 RAG/
 ├── data/
 │   └──                       # volume de données (artefacts du pipeline)
-├── RAG/
-│   ├── docker-compose.yml
-│   ├── .env                          # clés API (non versionné)
+│
+├───├── docker-compose.yml
+│   ├── .envFolder             
+│   ├── .env                # clés API (non versionné)
 │   ├── 1_dockerExport/
 │   ├── 2_dockerTestExport/
 │   ├── 3_dockerVectorisation/
 │   ├── 4_dockerTestVectorisation/
 │   ├── 5_dockerGetReponses/
 │   ├── 6_dockerRagasTest/
-│   └── 7_dockerChatBot/
-├── RAG_Presentation.pptx             # présentation du projet (15 slides)
-├── RAG_Rapport_Technique.docx        # rapport technique détaillé
-└── README.md
+│   │── 7_dockerChatBot/
+│   ├── RAG_Rapport_Technique.docx    # rapport technique détaillé
+│   ├── README.md
+
+
 
 ---
 

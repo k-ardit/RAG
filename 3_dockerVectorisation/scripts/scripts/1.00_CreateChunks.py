@@ -102,7 +102,7 @@ logging.info(f"Duplication terminée - nombre de lignes après : {len(data)} ({l
 """"""
 
 
-"""Création du fichier prêt pour le chunking des données"""
+"""Création des fichier de chunks"""
 logging.info("Construction du dataframe final pour le chunking")
 dfFinal = pd.DataFrame({})
 dfFinal["id"] = data["uid"]
