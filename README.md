@@ -64,7 +64,7 @@ Chaque conteneur a son propre README détaillé dans `RAG/<n>_docker*/README.md`
 
 ### Installation
 
-git clone <url-du-repo>
+git clone https://github.com/k-ardit/RAG.git
 cd RAG
 
 Créer un fichier `.env` à la racine de `RAG/` :
