@@ -43,7 +43,7 @@ Sept conteneurs Docker enchaînés séquentiellement via `depends_on: service_co
 |---|-----------------------|----------------------------------------------|------------------------------------------|
 | 1 | `export`              | Téléchargement OpenData + nettoyage DuckDB   | `FichierFinal.xlsx`                      |
 | 2 | `testexport`          | Tests qualité données + email                | `testsExport.xlsx`                       |
-| 3 | `vectorisation`       | Chunking + embeddings + index FAISS          | `faiss_index.idx`, `document_chunks.pkl` |
+| 3 | `vectorisation`       | Chunking + embeddings + index FAISS          | `faiss_index.idx`, `chunks.pkl`, `chunks.xlsx`  |
 | 4 | `testvectorisation`   | Test de récupération (k, score)              | `QuestionTest.xlsx`                      |
 | 5 | `getresponse`         | Génération via Mistral Large                 | `QuestionTest.xlsx` (enrichi)            |
 | 6 | `testragas`           | Évaluation Ragas (juge gpt-4o)               | `testRagas.xlsx`                         |
@@ -69,10 +69,10 @@ cd RAG
 
 Créer un fichier `.env` à la racine de `RAG/` :
 
-MISTRAL_API_KEY=sk-...
-OPENAI_API_KEY=sk-...
-EMAIL_USER=votre@email.fr
-EMAIL_PASSWORD=...
+MISTRAL_API_KEY=
+OPENAI_API_KEY=sk-
+EMAIL_USER=
+EMAIL_PASSWORD=
 
 ### Lancement du pipeline complet
 
@@ -168,27 +168,8 @@ Variables d'environnement à définir dans `dockerCompose_Flow02/.env` :
 
 Tous les conteneurs partagent le volume `./data → /data`.
 
-data/
-├── 01_export/
-│   ├── publicEvent.json        # données brutes téléchargées
-│   ├── FichierFinal.xlsx       # données nettoyées (658 lignes)
-│   ├── hashFiles.xlsx          # hash + idExport historisés
-├── 02_exportTest/
-│   └── testsExport.xlsx        # résultats des tests qualité
-├── 03_vectorisation/
-│   ├── faiss_index.idx         # index FAISS (~1 500 vecteurs)
-│   └── chunks.pkl              # chunks alignés avec l'index
-│   └── vectors.xlsx            # vecteurs pour chaque chunk
-│   ├── chunks.xlsx             # index FAISS (~1 500 vecteurs)
-├── 04_testVectorisation/
-│   ├── QuestionTest.xlsx       # grille de tests Q/R  
-├── 05_reponse/
-│   ├── QuestionTest.xlsx       # grille de tests Q/R   
-├── 06_testRagas/
-│   └── testRagas.xlsx          # résultats Ragas
-├── QuestionTest.xlsx           # grille de tests Q/R  
+<img width="543" height="491" alt="image" src="https://github.com/user-attachments/assets/6f60c36f-3662-414c-b13e-3fe59cdaa214" />
 
----
 
 
 ## Résultats
@@ -201,7 +182,7 @@ data/
 | Q2 — Durée évènement PROVALP 3D           | 1.00         | 1.00              | 1.00           |
 | Q3 — Date évènement PROVALP 3D            | 1.00         | 1.00              | 1.00           |
 | Q4 — Évènement Lycée Parc Impérial        | 1.00         | 1.00              | 1.00           |
-| Moyenne                               | 1.00     | 0.75          | 0.875      |
+| Moyenne                                   | 1.00         | 0.75              | 0.875          |
 
 - Aucune hallucination détectée : la faithfulness moyenne est de 1.00.
 - Le décrochage sur Q1 vient du fait que la question vise plusieurs évènements simultanément ; un seul des deux chunks attendus a été récupéré.
@@ -223,22 +204,8 @@ data/
 
 ## Structure du dépôt
 
-RAG/
-├── data/
-│   └──                       # volume de données (artefacts du pipeline)
-│
-├───├── docker-compose.yml
-│   ├── .envFolder             
-│   ├── .env                # clés API (non versionné)
-│   ├── 1_dockerExport/
-│   ├── 2_dockerTestExport/
-│   ├── 3_dockerVectorisation/
-│   ├── 4_dockerTestVectorisation/
-│   ├── 5_dockerGetReponses/
-│   ├── 6_dockerRagasTest/
-│   │── 7_dockerChatBot/
-│   ├── RAG_Rapport_Technique.docx    # rapport technique détaillé
-│   ├── README.md
+<img width="623" height="401" alt="image" src="https://github.com/user-attachments/assets/4df573d6-bc23-40b4-9796-72513120bb15" />
+
 
 
 
