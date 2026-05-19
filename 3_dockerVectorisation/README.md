@@ -14,14 +14,14 @@ Cœur du RAG : transforme les évènements en base vectorielle interrogeable.
 
 | Type   | Fichier                                       | Description                              |
 |--------|-----------------------------------------------|------------------------------------------|
-| Entrée | `/data/Flow02/OpenData/FichierFinal.xlsx`     | Données nettoyées du conteneur 1         |
-| Sortie | `/data/Flow02/inputs/DataForChunk.xlsx`       | Données préparées pour le chunking (1 515 lignes) |
-| Sortie | `/data/Flow02/vector_db/faiss_index.idx`      | Index FAISS (1 514 vecteurs × 1 024 dims)|
-| Sortie | `/data/Flow02/vector_db/document_chunks.pkl`  | Chunks alignés avec l'index FAISS        |
+| Entrée | `/data/01_export/FichierFinal.xlsx`           | Données nettoyées du conteneur 1         |
+| Sortie | `/data/03_vectorisation/chunk.xlsx`           | Données préparées pour le chunking (1 515 lignes) |
+| Sortie | `/data/03_vectorisation/faiss_index.idx`      | Index FAISS (1 514 vecteurs × 1 024 dims)|
+| Sortie | `/data/03_vectorisation/chunks.pkl`           | Chunks alignés avec l'index FAISS utilisé par le chatbot (conteneur 7)   |
 
 ## Étapes exécutées
 
-### 1. `1.00_PreparationDonnees.py`
+### 1. `1.00_CreateChunks.py`
 Enrichit `FichierFinal.xlsx` :
 
 - renommage `longdescription_fr` → `description`, `conditions_fr` → `conditions` ;
@@ -32,23 +32,19 @@ Enrichit `FichierFinal.xlsx` :
 - injection de `"none"` dans toutes les cellules vides ;
 - export dans `DataForChunk.xlsx` avec une colonne `Split2` servant de séparateur de chunks.
 
-### 2. `2.00_Indexer.py`
+### 1. `2.00_CreateEmbeddings.py`
+Enrichit `FichierFinal.xlsx` :
+- Vectorisation uniquement des chunks qui ne sont pas déjà vectorisé (comparaison entre les colonnes "hash" et "rowHash")
+- Embeddings : `mistral-embed` (dim 1 024), batch de 32.
+- export dans `vectors.xlsx`.
+
+
+### 2. `3.00_CreateIndex.py`
 
 Chunking, embeddings et indexation FAISS :
 
-```python
-RecursiveCharacterTextSplitter(
-    separators=[",\"Split2\":null},"],
-    chunk_size=1500,
-    chunk_overlap=150,
-    length_function=len,
-    add_start_index=True,
-)
-```
-
-- Embeddings : `mistral-embed` (dim 1 024), batch de 32.
 - Normalisation L2 puis indexation dans un FAISS `IndexFlatIP` (similarité cosinus).
-- Sérialisation : `faiss_index.idx` (index) + `document_chunks.pkl` (chunks avec `id`, `text`, `metadata`).
+- Sérialisation : `faiss_index.idx` (index), (chunks avec `id`, `text`, `metadata`).
 
 ## Paramètres clés
 
@@ -57,8 +53,8 @@ Définis dans `scripts/scripts/utils/config.py` :
 | Paramètre              | Valeur            |
 |------------------------|-------------------|
 | `EMBEDDING_MODEL`      | `mistral-embed`   |
-| `CHUNK_SIZE`           | 1 500 caractères  |
-| `CHUNK_OVERLAP`        | 150 caractères    |
+| `CHUNK_SIZE`           | 1 ligne Excel     |
+| `CHUNK_OVERLAP`        | 0 caractères      |
 | `EMBEDDING_BATCH_SIZE` | 32                |
 
 ## Construction et lancement
@@ -69,11 +65,10 @@ docker compose up --build vectorisation
 
 ## Stack
 
-- **Image de base** : `ubuntu:jammy`
-- **Dépendances clés** : `mistralai==0.4.2`, `langchain==0.3.23`, `faiss-cpu==1.10.0`, `pandas`, `openpyxl`, `python-dotenv`
+- Image de base : `ubuntu:jammy`
+- Dépendances clés : `mistralai==0.4.2`, `langchain==0.3.23`, `faiss-cpu==1.10.0`, `pandas`, `openpyxl`, `python-dotenv`
 
 ## Configuration
 
-```bash
-MISTRAL_API_KEY=sk-...
-```
+MISTRAL_API_KEY
+

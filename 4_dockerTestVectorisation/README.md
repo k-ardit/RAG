@@ -1,6 +1,6 @@
 # Conteneur 4 — `testvectorisation`
 
-Test de la qualité de la récupération vectorielle : pour chaque question d'une grille préparée manuellement, on vérifie le **rang** (k) et le **score** des chunks attendus dans les résultats FAISS.
+Test de la qualité de la récupération vectorielle : pour chaque question d'une grille préparée manuellement, on vérifie le rang (k) et le score des chunks attendus dans les résultats FAISS.
 
 ## Rôle dans le pipeline
 
@@ -12,12 +12,12 @@ Calibre les paramètres de recherche (`k`, `min_score`) en confrontant les résu
 
 ## Entrées et sorties
 
-| Type   | Fichier                                       | Description                              |
-|--------|-----------------------------------------------|------------------------------------------|
-| Entrée | `/data/Flow02/vector_db/faiss_index.idx`      | Index FAISS du conteneur 3               |
-| Entrée | `/data/Flow02/vector_db/document_chunks.pkl`  | Chunks alignés sur l'index               |
-| Entrée | `/data/Flow02/QuestionTest/QuestionTest.xlsx` | Grille de questions tests (manuelle)     |
-| Sortie | `/data/Flow02/QuestionTest/QuestionTest.xlsx` | Fichier complété avec rang et score      |
+| Type   | Fichier                                        | Description                              |
+|--------|------------------------------------------------|------------------------------------------|
+| Entrée | `/data/03_vectorisation/faiss_index.idx`       | Index FAISS du conteneur 3               |
+| Entrée | `/data/03_vectorisation/chunks.pkl`            | Chunks alignés sur l'index               |
+| Entrée | `/data/QuestionTest.xlsx`                      | Grille de questions tests (manuelle) question + réponses attendues + identifiants|
+| Sortie | `/data/04_testVectorisation/QuestionTest.xlsx` | Fichier complété avec rang et score      |
 
 ## Étapes exécutées
 
@@ -26,7 +26,7 @@ Calibre les paramètres de recherche (`k`, `min_score`) en confrontant les résu
 1. Charge l'index FAISS et les chunks.
 2. Pour chaque question de `QuestionTest.xlsx` :
    - Calcule l'embedding via `mistral-embed`.
-   - Recherche les **k = 210** chunks les plus pertinents avec `min_score = 0.7`.
+   - Recherche les k = 210 chunks les plus pertinents avec `min_score = 0.7`.
    - Pour chaque identifiant attendu (colonne `IdentifiantsATrouver`), récupère son rang et son score.
 3. Sauvegarde dans les colonnes `identifiant/k` et `identifiant/score`.
 
@@ -44,7 +44,7 @@ Calibre les paramètres de recherche (`k`, `min_score`) en confrontant les résu
 ## Résultats observés
 
 Sur la grille de 4 questions tests, les chunks réellement pertinents apparaissent systématiquement avec un score > 80 %.
-→ Paramètres retenus pour la production : **`k = 100`, `min_score = 0.8`**.
+→ Paramètres retenus pour la production : `k = 100`, `min_score = 0.8`.
 
 ## Construction et lancement
 
@@ -54,11 +54,9 @@ docker compose up --build testvectorisation
 
 ## Stack
 
-- **Image de base** : `ubuntu:jammy`
-- **Dépendances clés** : `mistralai==0.4.2`, `faiss-cpu==1.10.0`, `pandas`, `openpyxl`
+- Image de base : `ubuntu:jammy`
+- Dépendances clés : `mistralai==0.4.2`, `faiss-cpu==1.10.0`, `pandas`, `openpyxl`
 
 ## Configuration
 
-```bash
-MISTRAL_API_KEY=sk-...
-```
+MISTRAL_API_KEY

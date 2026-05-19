@@ -14,9 +14,9 @@ Premier maillon : produit le jeu de données nettoyé qui alimentera l'ensemble 
 
 | Type   | Fichier                                    | Description                                  |
 |--------|--------------------------------------------|----------------------------------------------|
-| Sortie | `/data/Flow02/OpenData/publicEvent.json`   | Données brutes téléchargées depuis OpenData  |
-| Sortie | `/data/Flow02/OpenData/hashFiles.xlsx`     | Hash MD5 + idExport historisés               |
-| Sortie | `/data/Flow02/OpenData/FichierFinal.xlsx`  | Données nettoyées (658 lignes, 57 colonnes)  |
+| Sortie | `/data/01_export/publicEvent.json`         | Données brutes téléchargées depuis OpenData  |
+| Sortie | `/data/01_export/hashFiles.xlsx`           | Hash MD5 + idExport historisés               |
+| Sortie | `/data/01_export/FichierFinal.xlsx`        | Données nettoyées (658 lignes, 57 colonnes)  |
 
 ## Étapes exécutées
 
@@ -53,8 +53,8 @@ docker compose up export
 
 ## Stack
 
-- **Image de base** : `alpine:edge`
-- **Dépendances** (apk) : `python3`, `py3-pandas`, `py3-duckdb`, `py3-openpyxl`, `py3-requests`, `bash`
-- **DuckDB** est récupéré depuis le repository `edge/testing` (le seul à l'embarquer).
+- Image de base : `alpine:edge`
+- Dépendances (apk) : `python3`, `py3-pandas`, `py3-duckdb`, `py3-openpyxl`, `py3-requests`, `bash`
+- DuckDB est récupéré depuis le repository `edge/testing` (le seul à l'embarquer).
 
 
