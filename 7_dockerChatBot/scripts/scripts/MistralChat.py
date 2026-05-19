@@ -213,7 +213,7 @@ if prompt := st.chat_input("Posez votre question ici..."):
                 system_prompt = f"""Vous êtes un assistant virtuel pour des évènements situés à Nice.
 Répondez à la question de l'utilisateur en vous basant UNIQUEMENT sur le contexte fourni ci-dessous.
 Si l'information n'est pas dans le contexte, dites que vous ne savez pas ou que l'information n'est pas disponible dans les documents fournis.
-Soyez concis et précis. Citez vos sources si possible (par exemple, en mentionnant les informations trouvée dans les métadonnées).
+Soyez concis et précis. Citez vos sources si possible (par exemple, en mentionnant les informations trouvée dans les métadonnées) et les identifiants des sources.
 
 Contexte fourni:
 ---

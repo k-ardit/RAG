@@ -158,7 +158,7 @@ def getAnswer(Question: str):
     system_prompt = f"""Vous êtes un assistant virtuel pour des évènements situés à Nice.
     Répondez à la question de l'utilisateur en vous basant UNIQUEMENT sur le contexte fourni ci-dessous. Soyez concis et précis.
     Renvoyez premièrement la réponse.
-    Ensuite, renvoyez uniquement la liste des identifiants qui permettent de répondre à la question séparé par une virgule, s'il n'y en a pas, renvoyez none.
+    Ensuite, renvoyez uniquement la liste des identifiants qui permettent de répondre à la question séparé par une virgule et rien d'autre! S'il n'y en a pas, renvoyez none.
         
     Contexte fourni:
     ---

@@ -106,7 +106,7 @@ logging.info(f"Duplication terminée - nombre de lignes après : {len(data)} ({l
 logging.info("Construction du dataframe final pour le chunking")
 dfFinal = pd.DataFrame({})
 dfFinal["id"] = data["uid"]
-dfFinal["text"] = "<h1>Description de l'évènement : </h1>" + data["description"].astype(str) + "<h1>Informations supplémentaires : </h1><p>- Les conditions sont les suivantes : " + data["conditions"].astype(str) + "<br>- L'évènement se déroule à l'adresse suivante : " + data["addresse"].astype(str) + "<br>- L'évènement aura lieu à la date suivante : " + data["datesEvenement"].astype(str) + "<br>- l'évènement durera : " + data["dureeEvenement"].astype(str) + "</p>"
+dfFinal["text"] = "<h1>Date de l'évènement : </h1>" + " <p>l'évènement se déroule le " + data["datesEvenement"].str.split(" ").str[0] + " à " + data["datesEvenement"].str.split(" ").str[1]  +  "</p><h1>Description de l'évènement : </h1><p>" + data["description"].astype(str) + "<h1>Informations supplémentaires : </p></h1><p>- Les conditions sont les suivantes : " + data["conditions"].astype(str) + "<br>- L'évènement se déroule à l'adresse suivante : " + data["addresse"].astype(str) + "l'évènement se déroule le " +  data["datesEvenement"] + "<br>- l'évènement durera : " + data["dureeEvenement"].astype(str) + "</p>"
 dfFinal["metadata"] = "[{ motsCles : " + data["keywords_fr"].astype(str) + "},{ accessibilite : " + data["accessibility_label_fr"].astype(str) + "},{ coordonnees : " + data["location_coordinates"].astype(str) + "},{ telephone : " + data["location_phone"].astype(str) + "},{ site_web : " + data["location_website"].astype(str) + "}]"
 dfFinal["model"] = os.environ["MODEL_EMBEDDING"]
 
