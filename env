@@ -1,0 +1,20 @@
+
+# Ne JAMAIS commiter le fichier .env réel.
+
+# --- API Mistral (conteneurs vectorisation, testvectorisation, getresponse, chatbot) ---
+MISTRAL_API_KEY=
+
+# --- API OpenAI (conteneur testragas, juge gpt-4o) ---
+OPENAI_API_KEY=
+
+# --- SMTP pour l'envoi d'emails de notification (conteneur testexport) ---
+EMAIL_USER=
+EMAIL_PASSWORD=
+EMAIL_SMTP_SERVER=mail.gmx.com
+EMAIL_SMTP_PORT=587
+EMAIL_RECIPIENT=
+
+# Modèle Mistral utilisé pour la génération (override de la valeur par défaut)
+# CHAT_MODEL=mistral-large-latest
+MODEL_EMBEDDING=mistral-embed
+EMBEDDING_BATCH_SIZE=32
