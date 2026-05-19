@@ -14,9 +14,9 @@ Garde-fou qualité : si une dérive est détectée sur les données OpenData (ch
 
 | Type   | Fichier                                     | Description                                     |
 |--------|---------------------------------------------|-------------------------------------------------|
-| Entrée | `/data/Flow02/OpenData/FichierFinal.xlsx`   | Données nettoyées du conteneur 1                |
-| Entrée | `/data/Flow02/OpenData/hashFiles.xlsx`      | Hash + idExport courant                         |
-| Sortie | `/data/Flow02/OpenData/testsExport.xlsx`    | Rapport historisé des tests                     |
+| Entrée | `/data/01_export/FichierFinal.xlsx`         | Données nettoyées du conteneur 1                |
+| Entrée | `/data/01_export/hashFiles.xlsx`            | Hash + idExport courant                         |
+| Sortie | `/data/02_exportTest/testsExport.xlsx`      | Rapport historisé des tests                     |
 | Action | —                                           | Envoi d'un email récapitulatif                  |
 
 ## Étapes exécutées
@@ -27,7 +27,7 @@ Garde-fou qualité : si une dérive est détectée sur les données OpenData (ch
 Récupère le hash et l'idExport courants depuis `hashFiles.xlsx` pour les injecter dans le rapport de tests.
 
 ### 2. `2.00_TestRequette.py`
-Vérifie que les données générées par le conteneur 1 concernent bien **Nice** et **l'année écoulée** (cohérence avec les filtres OpenData).
+Vérifie que les données générées par le conteneur 1 concernent bien Nice et l'année écoulée (cohérence avec les filtres OpenData).
 
 ### 3. `3.00_TestsAbsenceDoublons.py`
 Contrôle d'unicité sur la colonne `uid`. Recense le nombre de doublons éventuels.
@@ -58,14 +58,12 @@ docker compose up --build testexport
 
 ## Stack
 
-- **Image de base** : `alpine:edge`
-- **Dépendances** (apk) : `python3`, `py3-pandas`, `py3-duckdb`, `py3-openpyxl`, `py3-scipy`, `bash`
+- Image de base : `alpine:edge`
+- Dépendances (apk) : `python3`, `py3-pandas`, `py3-duckdb`, `py3-openpyxl`, `py3-scipy`, `bash`
 
 ## Configuration
 
-Variables requises dans `dockerCompose_Flow02/.env` :
+Variables requises dans `RAG/.env` :
 
-```bash
-EMAIL_USER=votre@email.fr
-EMAIL_PASSWORD=...
-```
+EMAIL_USER
+EMAIL_PASSWORD
