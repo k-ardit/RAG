@@ -111,7 +111,7 @@ docker compose up --build testragas
 ### 3. `vectorisation` — Indexation FAISS
 
 - vectorisation des chunks qui n'ont pas déjà été vectorisé (comparaison grace au hash de chaque ligne)
-- Préparation de `chunk.xlsx` et `chunk.xlsx` (~ 1 500 lignes : `id, text, metadata`)..
+- Préparation de `chunks.xlsx` et `chunks.pkl` (~ 1 500 lignes : `id, text, metadata`)..
 - taille d'un chunk = une ligne Excel, `chunk_overlap = 0`.
 - Embeddings `mistral-embed` (dim 1 024), par lots de 32, normalisés L2.
 - Index FAISS `IndexFlatIP` → sérialisé dans `faiss_index.idx`.
@@ -152,7 +152,7 @@ Interface graphique disponible sur <http://localhost:8501> :
 
 ## Configuration
 
-Variables d'environnement à définir dans `dockerCompose_Flow02/.env` :
+Variables d'environnement à définir dans `RAG/.env` :
 
 | Variable          | Utilisé par                              | Description                                |
 |-------------------|------------------------------------------|--------------------------------------------|
