@@ -74,7 +74,7 @@ OPENAI_API_KEY=sk-
 EMAIL_USER=
 EMAIL_PASSWORD=
 
-### Lancement du pipeline complet
+### Lancement du pipeline complet (docker-compose.yml à modifier)
 
 docker compose up --build
 
@@ -85,10 +85,11 @@ Les six premiers conteneurs s'exécutent séquentiellement puis se terminent. Le
 
 # Régénérer uniquement l'index vectoriel
 docker compose up --build vectorisation
+à éxécuter dans le conteneur : bash /scripts/scripts.sh
 
 # Relancer uniquement l'évaluation Ragas
 docker compose up --build testragas
-
+à éxécuter dans le conteneur : bash /scripts/scripts.sh
 ---
 
 ## Détail des conteneurs
