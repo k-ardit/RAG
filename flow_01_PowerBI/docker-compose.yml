@@ -1,0 +1,18 @@
+services:
+
+  export:
+    build:
+      context: ./1_dockerExport
+    container_name: strava_export
+    volumes:
+      - ./../data:/data
+      - ./1_dockerExport/scripts:/scripts
+    env_file:
+      - .envFolder
+    networks:
+      - flow_01_strava_strava_network
+    command: sh -c "tail -f /dev/null"
+
+networks:
+  flow_01_strava_strava_network:
+    external: true

@@ -21,6 +21,15 @@ services:
       - flow_01_strava_strava_network
     restart: unless-stopped
 
+  slack:
+    build:
+      context: ./7_dockerSlack
+      dockerfile: Dockerfile
+    container_name: strava_slack
+    networks:
+      - flow_01_strava_strava_network
+    restart: unless-stopped
+
 networks:
   flow_01_strava_strava_network:
     external: true
