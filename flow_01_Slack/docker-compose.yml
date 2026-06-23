@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+
+  # ── Debezium Server (sans Kafka) ─────────────────────────────────────────────
+  debezium:
+    build:
+      context: ./6_dockerDebezium
+      dockerfile: Dockerfile
+    container_name: strava_debezium
+    env_file:
+      - .env
+    environment:
+      DEBEZIUM_SOURCE_DATABASE_USER: ${DEBEZIUM_USER}
+      DEBEZIUM_SOURCE_DATABASE_PASSWORD: ${DEBEZIUM_PASSWORD}
+    # depends_on:
+    #   - init_db
+    volumes:
+      - ./6_dockerDebezium/data:/debezium/data:rw    # stockage offsets + schéma + events
+    networks:
+      - flow_01_strava_strava_network
+    restart: unless-stopped
+
+networks:
+  flow_01_strava_strava_network:
+    external: true
