@@ -13,6 +13,22 @@ services:
       - flow_01_strava_strava_network
     command: sh -c "tail -f /dev/null"
 
+  testexport:
+    build:
+      context: ./2_dockerTestExport
+    container_name: strava_testexport
+    volumes:
+      - ./2_dockerTestExport/scripts:/scripts
+    env_file:
+      - .env
+      - .envFolder
+    networks:
+      - flow_01_strava_strava_network
+    command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   export:
+    #     condition: service_completed_successfully
+
 networks:
   flow_01_strava_strava_network:
     external: true
