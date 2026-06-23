@@ -1,0 +1,28 @@
+# ── Étape 1 : Build ──────────────────────────────────────────
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+
+# Copier le .csproj et restaurer les dépendances (cache Docker)
+COPY ["/StravaApp/StravaApp/StravaApp.csproj", "."]
+RUN dotnet restore
+
+# Copier tout le code source et publier
+COPY /StravaApp .
+RUN dotnet publish -c Release -o /app/publish
+
+# ── Étape 2 : Runtime (image légère) ─────────────────────────
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+WORKDIR /app
+
+# Copier uniquement les fichiers publiés
+COPY --from=build /app/publish .
+
+# Port exposé
+EXPOSE 8080
+
+# Variables d'environnement
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS=http://+:8080
+
+# Lancer l'application
+ENTRYPOINT ["dotnet", "StravaApp.dll"]
