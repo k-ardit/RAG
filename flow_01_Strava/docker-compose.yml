@@ -42,6 +42,26 @@ services:
       - strava_network
     #command: sh -c "tail -f /dev/null"
 
+  # Application MVC
+  webapp:
+    build:
+      context: ./2_dockerWebAppMvc
+      dockerfile: Dockerfile
+    container_name: monapp
+    volumes:
+    - ./logs:/app/logs
+    ports:
+      - "44350:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MonAppDb;User Id=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    restart: always
+    networks:
+      - strava_network
+
 volumes:
   sqldata:
   # debezium_data:
