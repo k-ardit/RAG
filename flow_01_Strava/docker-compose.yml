@@ -76,9 +76,21 @@ services:
       - webapp
     restart: "no"
 
+  # Récupération données
+  getdata:
+    build:
+      context: ./4_dockerRecuperationDonnees
+      dockerfile: Dockerfile
+    container_name: getdata
+    env_file:
+      - .env
+    networks:
+      - strava_network
+    restart: unless-stopped
+    command: sh -c "tail -f /dev/null"
+
 volumes:
   sqldata:
-  # debezium_data:
 
 networks:
   strava_network:
