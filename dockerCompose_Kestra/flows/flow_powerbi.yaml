@@ -1,0 +1,178 @@
+id: flow_powerbi
+namespace: avantages_sportifs
+
+description: |
+  Orchestration du flow PowerBI (DC3) :
+    1. Export et nettoyage des données SQL Server
+    2. Validation des déclarations (Google Maps)
+    3. Génération des données de test Strava
+    4. Tests qualité des exports
+    5. Calcul des primes (trajet + bien-être)
+
+# ── Déclencheur ───────────────────────────────────────────────────────────────
+triggers:
+  - id: schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/59 * * * *"  # tous les lundis à 6h
+
+# ── Retry global ──────────────────────────────────────────────────────────────
+retry:
+  behavior: RETRY_FAILED_TASK
+  type: constant
+  maxAttempts: 3
+  interval: PT30S
+
+# ── Notification en cas d'échec ───────────────────────────────────────────────
+afterExecution:
+
+  - id: onSuccess
+    runIf: "{{ execution.state == 'SUCCESS' }}"
+    type: io.kestra.plugin.email.MailSend
+    from: arditi@gmx.fr
+    to: ardit.karaboja@live.com
+    username: "arditi@gmx.fr"
+    password: "{{ secret('GMX_PASSWORD') }}"
+    host: mail.gmx.com
+    port: 465
+    subject: "[OK] Flow PowerBI — {{ execution.startDate }}"
+    htmlTextContent: |
+      <h2>Flow {{ flow.namespace }}.{{ flow.id }} execute avec succes</h2>
+      <p>Execution ID : {{ execution.id }}</p>
+      <p>Heure de debut : {{ execution.startDate }}</p>
+      <p>Heure de fin : {{ execution.endDate }}</p>
+
+  - id: onFailure
+    runIf: "{{ execution.state == 'FAILED' }}"
+    type: io.kestra.plugin.email.MailSend
+    from: arditi@gmx.fr
+    to: ardit.karaboja@live.com
+    username: "arditi@gmx.fr"
+    password: "{{ secret('GMX_PASSWORD') }}"
+    host: mail.gmx.com
+    port: 465
+    subject: "[ECHEC] Flow PowerBI — {{ flow.id }} — {{ execution.id }}"
+    htmlTextContent: |
+      <h2>Echec du flow {{ flow.namespace }}.{{ flow.id }}</h2>
+      <p>Execution ID : {{ execution.id }}</p>
+      <p>Heure : {{ execution.startDate }}</p>
+      <p>Consultez Kestra pour le détail des erreurs.</p>
+
+# ── Tasks ─────────────────────────────────────────────────────────────────────
+tasks:
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # CONTENEUR 1 — Export et nettoyage
+  # ════════════════════════════════════════════════════════════════════════════
+
+  - id: start_export
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker start strava_export
+
+  - id: script_export_donnees
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker exec strava_export python /scripts/scripts/1.00_ExportsDonnees.py
+
+  - id: script_nettoyage_donnees
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker exec strava_export python /scripts/scripts/2.00_NettoyageDonnees.py
+
+  # - id: script_validate_declarations
+  #   type: io.kestra.plugin.scripts.shell.Commands
+  #   taskRunner:
+  #     type: io.kestra.plugin.core.runner.Process
+  #   commands:
+  #     - docker exec strava_export python /scripts/scripts/2.00_ValidateDeclarations.py
+
+  # - id: script_generate_test_data
+  #   type: io.kestra.plugin.scripts.shell.Commands
+  #   taskRunner:
+  #     type: io.kestra.plugin.core.runner.Process
+  #   commands:
+  #     - docker exec strava_export python /scripts/scripts/3.00_GenerateTestData.py
+
+  - id: stop_export
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker stop strava_export
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # CONTENEUR 2 — Tests qualité
+  # ════════════════════════════════════════════════════════════════════════════
+
+  - id: start_testexport
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker start strava_testexport
+
+  - id: script_test_export
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker exec strava_testexport python /scripts/scripts/1.00_TestExport.py
+
+  - id: stop_testexport
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker stop strava_testexport
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # CONTENEUR 3 — Calcul des primes
+  # ════════════════════════════════════════════════════════════════════════════
+
+  - id: start_calcul_primes
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker start strava_calcul_primes
+
+  - id: script_generate_test_data_primes
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker exec strava_calcul_primes python /scripts/scripts/1.00_GenerateTestData.py
+
+  - id: script_validate_declarations
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker exec strava_calcul_primes python /scripts/scripts/2.00_ValidateDeclarations.py
+
+  - id: script_prime_trajet
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker exec strava_calcul_primes python /scripts/scripts/3.00_PrimeTrajet.py
+
+  - id: script_prime_bienetre
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker exec strava_calcul_primes python /scripts/scripts/4.00_PrimeBienEtre.py
+
+  - id: stop_calcul_primes
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker stop strava_calcul_primes

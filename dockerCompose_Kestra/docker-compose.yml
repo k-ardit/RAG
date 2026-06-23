@@ -1,0 +1,75 @@
+services:
+
+  kestra:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: strava_kestra
+    ports:
+      - "8080:8080"   # Interface web Kestra
+      - "8081:8081"   # API Kestra
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # socket Docker hôte
+      - kestra_data:/app/storage
+      - ./../data:/data
+      - ./flows:/app/flows                               # dossier des flows YAML
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - .env
+    environment:
+      KESTRA_SECRET_TYPE: env-var
+      KESTRA_SECRET_ENV-VAR_PREFIX: SECRET_
+      KESTRA_CONFIGURATION: |
+        datasources:
+          postgres:
+            url: jdbc:postgresql://postgres:5432/kestra
+            username: kestra
+            password: kestra
+        kestra:
+          server:
+            basic-auth:
+              enabled: false
+          repository:
+            type: postgres
+          storage:
+            type: local
+            local:
+              base-path: /app/storage
+          queue:
+            type: postgres
+          flows:
+            local-files:
+              enabled: true
+              watch-directory: /app/flows
+    command: server standalone
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - strava_network
+
+  postgres:
+    image: postgres:15
+    container_name: strava_kestra_postgres
+    environment:
+      POSTGRES_DB:       kestra
+      POSTGRES_USER:     kestra
+      POSTGRES_PASSWORD: kestra
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kestra"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - strava_network
+
+networks:
+  strava_network:
+    driver: bridge
+
+volumes:
+  kestra_data:
+  postgres_data:

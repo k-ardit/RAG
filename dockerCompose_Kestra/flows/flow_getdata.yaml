@@ -1,0 +1,79 @@
+id: flow_getdata
+namespace: avantages_sportifs
+
+description: |
+  Synchronisation des activités Strava toutes les 2 minutes.
+  Lance le script getData qui rafraîchit les tokens et récupère
+  les nouvelles activités pour tous les athlètes enregistrés.
+
+triggers:
+  - id: schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/59 * * * *"
+
+concurrency:
+  behavior: CANCEL
+  limit: 1
+
+retry:
+  behavior: RETRY_FAILED_TASK
+  type: constant
+  maxAttempts: 3
+  interval: PT15S
+
+afterExecution:
+
+  - id: onSuccess
+    runIf: "{{ execution.state == 'SUCCESS' }}"
+    type: io.kestra.plugin.email.MailSend
+    from: arditi@gmx.fr
+    to: ardit.karaboja@live.com
+    username: "arditi@gmx.fr"
+    password: "{{ secret('GMX_PASSWORD') }}"
+    host: mail.gmx.com
+    port: 465
+    subject: "[OK] Flow GetData — {{ execution.startDate }}"
+    htmlTextContent: |
+      <h2>Flow {{ flow.namespace }}.{{ flow.id }} execute avec succes</h2>
+      <p>Execution ID : {{ execution.id }}</p>
+      <p>Heure de debut : {{ execution.startDate }}</p>
+      <p>Heure de fin : {{ execution.endDate }}</p>
+      
+  - id: onFailure
+    runIf: "{{ execution.state == 'FAILED' }}"
+    type: io.kestra.plugin.email.MailSend
+    from: arditi@gmx.fr
+    to: ardit.karaboja@live.com
+    username: "arditi@gmx.fr"
+    password: "{{ secret('GMX_PASSWORD') }}"
+    host: mail.gmx.com
+    port: 465
+    subject: "[ECHEC] Flow GetData — {{ flow.id }} — {{ execution.id }}"
+    htmlTextContent: |
+      <h2>Echec du flow {{ flow.namespace }}.{{ flow.id }}</h2>
+      <p>Execution ID : {{ execution.id }}</p>
+      <p>Heure : {{ execution.startDate }}</p>
+      <p>Consultez Kestra pour le détail des erreurs.</p>
+
+tasks:
+
+  - id: start_getdata
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker start getdata
+
+  - id: script_getdata
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker exec getdata python /scripts/scripts/1.00_getData.py
+
+  - id: stop_getdata
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - docker stop getdata
