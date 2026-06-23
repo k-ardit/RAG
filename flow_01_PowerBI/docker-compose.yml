@@ -29,6 +29,23 @@ services:
     #   export:
     #     condition: service_completed_successfully
 
+  calcul_primes:
+    build:
+      context: ./3_dockerCalculPrimes
+    container_name: strava_calcul_primes
+    volumes:
+      - ./3_dockerCalculPrimes/scripts:/scripts
+      - ./../data:/data
+    env_file:
+      - .envFolder
+      - .env
+    networks:
+      - flow_01_strava_strava_network
+    command: sh -c "tail -f /dev/null"
+    # depends_on:
+    #   testexport:
+    #     condition: service_completed_successfully
+
 networks:
   flow_01_strava_strava_network:
     external: true
