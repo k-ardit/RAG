@@ -62,6 +62,20 @@ services:
     networks:
       - strava_network
 
+  # Envoi de l'email pour récupérer les droits d'accès
+  send_email:
+    build:
+      context: ./3_dockerSendEmail
+      dockerfile: Dockerfile
+    container_name: strava_email
+    env_file: 
+      - .env
+    volumes:
+      - ./3_dockerSendEmail/destinataires.xlsx:/app/destinataires.xlsx
+    depends_on:
+      - webapp
+    restart: "no"
+
 volumes:
   sqldata:
   # debezium_data:
