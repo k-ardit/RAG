@@ -8,6 +8,7 @@ services:
       - ./../data:/data
       - ./1_dockerExport/scripts:/scripts
     env_file:
+      - .env
       - .envFolder
     networks:
       - flow_01_strava_strava_network
@@ -37,8 +38,8 @@ services:
       - ./3_dockerCalculPrimes/scripts:/scripts
       - ./../data:/data
     env_file:
-      - .envFolder
       - .env
+      - .envFolder
     networks:
       - flow_01_strava_strava_network
     command: sh -c "tail -f /dev/null"

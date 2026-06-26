@@ -37,6 +37,10 @@ services:
       SQL_DATABASE: "StravaDb"
       SQL_USER:     "sa"
       SQL_PASSWORD: "${SQL_PASSWORD}"
+      POWERBI_USER:      "powerbi_user"
+      POWERBI_PASSWORD:  "${POWERBI_PASSWORD}"
+      DEBEZIUM_USER:     "debezium_user"
+      DEBEZIUM_PASSWORD: "${DEBEZIUM_PASSWORD}"
     restart: "no"  # s'exécute une seule fois puis s'arrête
     networks:
       - strava_network

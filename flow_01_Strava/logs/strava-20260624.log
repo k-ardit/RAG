@@ -1,0 +1,98 @@
+2026-06-24 09:53:08.887 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2026-06-24 09:53:09.012 +00:00 [INF] User profile is available. Using '/root/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2026-06-24 09:53:09.071 +00:00 [INF] Creating key {14a60da1-afd2-4f94-88ff-92302cad4815} with creation date 2026-06-24 09:53:09Z, activation date 2026-06-24 09:53:09Z, and expiration date 2026-09-22 09:53:09Z.
+2026-06-24 09:53:09.111 +00:00 [WRN] No XML encryptor configured. Key {14a60da1-afd2-4f94-88ff-92302cad4815} may be persisted to storage in unencrypted form.
+2026-06-24 09:53:09.120 +00:00 [INF] Writing data to file '/root/.aspnet/DataProtection-Keys/key-14a60da1-afd2-4f94-88ff-92302cad4815.xml'.
+2026-06-24 09:53:09.142 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://+:8080'.
+2026-06-24 09:53:09.268 +00:00 [INF] Now listening on: http://[::]:8080
+2026-06-24 09:53:09.277 +00:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-24 09:53:09.278 +00:00 [INF] Hosting environment: Production
+2026-06-24 09:53:09.279 +00:00 [INF] Content root path: /app
+2026-06-24 09:53:48.740 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/ - null null
+2026-06-24 09:53:48.852 +00:00 [INF] Executing endpoint 'StravaAuth.Controllers.HomeController.Index (StravaApp)'
+2026-06-24 09:53:48.911 +00:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller StravaAuth.Controllers.HomeController (StravaApp).
+2026-06-24 09:53:48.957 +00:00 [INF] Executing ViewResult, running view Index.
+2026-06-24 09:53:49.099 +00:00 [INF] Executed ViewResult - view Index executed in 142.6452ms.
+2026-06-24 09:53:49.119 +00:00 [INF] Executed action StravaAuth.Controllers.HomeController.Index (StravaApp) in 206.6477ms
+2026-06-24 09:53:49.120 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2026-06-24 09:53:49.121 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/StravaApp.styles.css?v=jwF2ML4JS0rTWR-ZifXzeJkyUDLM_1WEa5j85XPPRtU - null null
+2026-06-24 09:53:49.123 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/lib/jquery/dist/jquery.min.js - null null
+2026-06-24 09:53:49.121 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/css/site.css?v=j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg - null null
+2026-06-24 09:53:49.121 +00:00 [INF] Executed endpoint 'StravaAuth.Controllers.HomeController.Index (StravaApp)'
+2026-06-24 09:53:49.125 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/lib/bootstrap/dist/js/bootstrap.bundle.min.js - null null
+2026-06-24 09:53:49.133 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/ - 200 null text/html; charset=utf-8 394.9428ms
+2026-06-24 09:53:49.139 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/js/site.js?v=hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo - null null
+2026-06-24 09:53:49.157 +00:00 [INF] Sending file. Request path: '/css/site.css'. Physical path: '/app/wwwroot/css/site.css'
+2026-06-24 09:53:49.158 +00:00 [INF] Sending file. Request path: '/lib/bootstrap/dist/css/bootstrap.min.css'. Physical path: '/app/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css'
+2026-06-24 09:53:49.158 +00:00 [INF] Sending file. Request path: '/StravaApp.styles.css'. Physical path: '/app/wwwroot/StravaApp.styles.css'
+2026-06-24 09:53:49.162 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/StravaApp.styles.css?v=jwF2ML4JS0rTWR-ZifXzeJkyUDLM_1WEa5j85XPPRtU - 200 1078 text/css 42.1866ms
+2026-06-24 09:53:49.158 +00:00 [INF] Sending file. Request path: '/js/site.js'. Physical path: '/app/wwwroot/js/site.js'
+2026-06-24 09:53:49.158 +00:00 [INF] Sending file. Request path: '/lib/jquery/dist/jquery.min.js'. Physical path: '/app/wwwroot/lib/jquery/dist/jquery.min.js'
+2026-06-24 09:53:49.160 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/css/site.css?v=j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg - 200 667 text/css 40.8966ms
+2026-06-24 09:53:49.161 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/lib/bootstrap/dist/css/bootstrap.min.css - 200 232808 text/css 43.311ms
+2026-06-24 09:53:49.169 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/lib/jquery/dist/jquery.min.js - 200 87535 text/javascript 45.8719ms
+2026-06-24 09:53:49.167 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/js/site.js?v=hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo - 200 231 text/javascript 28.34ms
+2026-06-24 09:53:49.158 +00:00 [INF] Sending file. Request path: '/lib/bootstrap/dist/js/bootstrap.bundle.min.js'. Physical path: '/app/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js'
+2026-06-24 09:53:49.174 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/lib/bootstrap/dist/js/bootstrap.bundle.min.js - 200 80727 text/javascript 49.2772ms
+2026-06-24 09:53:49.213 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/favicon.ico - null null
+2026-06-24 09:53:49.215 +00:00 [INF] Sending file. Request path: '/favicon.ico'. Physical path: '/app/wwwroot/favicon.ico'
+2026-06-24 09:53:49.216 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/favicon.ico - 200 5430 image/x-icon 3.5531ms
+2026-06-24 09:53:53.719 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/Home/Callback?state=111111&code=4805adbd1382e5d34f9fe22fa87944915ea8243a&scope=read,activity:read_all - null null
+2026-06-24 09:53:53.722 +00:00 [INF] Executing endpoint 'StravaAuth.Controllers.HomeController.Callback (StravaApp)'
+2026-06-24 09:53:53.744 +00:00 [INF] Route matched with {action = "Callback", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Callback(System.String, System.String, System.String) on controller StravaAuth.Controllers.HomeController (StravaApp).
+2026-06-24 09:53:53.776 +00:00 [INF] Start processing HTTP request POST https://www.strava.com/oauth/token
+2026-06-24 09:53:53.781 +00:00 [INF] Sending HTTP request POST https://www.strava.com/oauth/token
+2026-06-24 09:53:54.387 +00:00 [INF] Received HTTP response headers after 602.5803ms - 200
+2026-06-24 09:53:54.388 +00:00 [INF] End processing HTTP request after 613.3659ms - 200
+2026-06-24 09:53:54.600 +00:00 [INF] Executing RedirectResult, redirecting to /.
+2026-06-24 09:53:54.601 +00:00 [INF] Executed action StravaAuth.Controllers.HomeController.Callback (StravaApp) in 856.2672ms
+2026-06-24 09:53:54.602 +00:00 [INF] Executed endpoint 'StravaAuth.Controllers.HomeController.Callback (StravaApp)'
+2026-06-24 09:53:54.605 +00:00 [INF] Session started; Key:322fb5da-def3-60e4-a7d6-03aded59b46c, Id:be861140-c1a5-3f63-9c5b-4b4329a0d1d8
+2026-06-24 09:53:54.608 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/Home/Callback?state=111111&code=4805adbd1382e5d34f9fe22fa87944915ea8243a&scope=read,activity:read_all - 302 0 null 889.0714ms
+2026-06-24 09:53:54.613 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/ - null null
+2026-06-24 09:53:54.614 +00:00 [INF] Executing endpoint 'StravaAuth.Controllers.HomeController.Index (StravaApp)'
+2026-06-24 09:53:54.615 +00:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller StravaAuth.Controllers.HomeController (StravaApp).
+2026-06-24 09:53:54.617 +00:00 [INF] Executing ViewResult, running view Index.
+2026-06-24 09:53:54.619 +00:00 [INF] Executed ViewResult - view Index executed in 2.6574ms.
+2026-06-24 09:53:54.620 +00:00 [INF] Executed action StravaAuth.Controllers.HomeController.Index (StravaApp) in 4.6417ms
+2026-06-24 09:53:54.621 +00:00 [INF] Executed endpoint 'StravaAuth.Controllers.HomeController.Index (StravaApp)'
+2026-06-24 09:53:54.622 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/ - 200 null text/html; charset=utf-8 8.986ms
+2026-06-24 12:40:49.185 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/Home/Callback?state=111111&code=34b132928169d35d43343b7f3e402f856f12d80b&scope=read,activity:read_all - null null
+2026-06-24 12:40:49.226 +00:00 [INF] Executing endpoint 'StravaAuth.Controllers.HomeController.Callback (StravaApp)'
+2026-06-24 12:40:49.233 +00:00 [INF] Route matched with {action = "Callback", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Callback(System.String, System.String, System.String) on controller StravaAuth.Controllers.HomeController (StravaApp).
+2026-06-24 12:40:49.264 +00:00 [INF] Start processing HTTP request POST https://www.strava.com/oauth/token
+2026-06-24 12:40:49.265 +00:00 [INF] Sending HTTP request POST https://www.strava.com/oauth/token
+2026-06-24 12:40:49.772 +00:00 [INF] Received HTTP response headers after 505.8754ms - 200
+2026-06-24 12:40:49.774 +00:00 [INF] End processing HTTP request after 509.877ms - 200
+2026-06-24 12:40:49.812 +00:00 [INF] Accessing expired session, Key:322fb5da-def3-60e4-a7d6-03aded59b46c
+2026-06-24 12:40:49.815 +00:00 [INF] Executing RedirectResult, redirecting to /.
+2026-06-24 12:40:49.816 +00:00 [INF] Executed action StravaAuth.Controllers.HomeController.Callback (StravaApp) in 581.3722ms
+2026-06-24 12:40:49.817 +00:00 [INF] Executed endpoint 'StravaAuth.Controllers.HomeController.Callback (StravaApp)'
+2026-06-24 12:40:49.817 +00:00 [INF] Session started; Key:322fb5da-def3-60e4-a7d6-03aded59b46c, Id:c22980d3-0596-306f-1d3e-d3f63adfc264
+2026-06-24 12:40:49.819 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/Home/Callback?state=111111&code=34b132928169d35d43343b7f3e402f856f12d80b&scope=read,activity:read_all - 302 0 null 637.0337ms
+2026-06-24 12:40:49.824 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/ - null null
+2026-06-24 12:40:49.825 +00:00 [INF] Executing endpoint 'StravaAuth.Controllers.HomeController.Index (StravaApp)'
+2026-06-24 12:40:49.826 +00:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller StravaAuth.Controllers.HomeController (StravaApp).
+2026-06-24 12:40:49.832 +00:00 [INF] Executing ViewResult, running view Index.
+2026-06-24 12:40:49.840 +00:00 [INF] Executed ViewResult - view Index executed in 13.7129ms.
+2026-06-24 12:40:49.846 +00:00 [INF] Executed action StravaAuth.Controllers.HomeController.Index (StravaApp) in 20.1147ms
+2026-06-24 12:40:49.849 +00:00 [INF] Executed endpoint 'StravaAuth.Controllers.HomeController.Index (StravaApp)'
+2026-06-24 12:40:49.852 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/ - 200 null text/html; charset=utf-8 28.0244ms
+2026-06-24 12:40:49.888 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2026-06-24 12:40:49.891 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/css/site.css?v=j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg - null null
+2026-06-24 12:40:49.892 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/StravaApp.styles.css?v=jwF2ML4JS0rTWR-ZifXzeJkyUDLM_1WEa5j85XPPRtU - null null
+2026-06-24 12:40:49.925 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/js/site.js?v=hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo - null null
+2026-06-24 12:40:49.894 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/lib/jquery/dist/jquery.min.js - null null
+2026-06-24 12:40:49.925 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:44350/lib/bootstrap/dist/js/bootstrap.bundle.min.js - null null
+2026-06-24 12:40:49.929 +00:00 [INF] The file /css/site.css was not modified
+2026-06-24 12:40:49.929 +00:00 [INF] The file /StravaApp.styles.css was not modified
+2026-06-24 12:40:49.929 +00:00 [INF] The file /js/site.js was not modified
+2026-06-24 12:40:49.929 +00:00 [INF] The file /lib/bootstrap/dist/css/bootstrap.min.css was not modified
+2026-06-24 12:40:49.931 +00:00 [INF] The file /lib/jquery/dist/jquery.min.js was not modified
+2026-06-24 12:40:49.933 +00:00 [INF] The file /lib/bootstrap/dist/js/bootstrap.bundle.min.js was not modified
+2026-06-24 12:40:49.934 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/css/site.css?v=j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg - 304 null text/css 42.4964ms
+2026-06-24 12:40:49.934 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/StravaApp.styles.css?v=jwF2ML4JS0rTWR-ZifXzeJkyUDLM_1WEa5j85XPPRtU - 304 null text/css 42.7713ms
+2026-06-24 12:40:49.937 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/js/site.js?v=hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo - 304 null text/javascript 11.4634ms
+2026-06-24 12:40:49.939 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/lib/bootstrap/dist/css/bootstrap.min.css - 304 null text/css 50.9619ms
+2026-06-24 12:40:49.942 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/lib/jquery/dist/jquery.min.js - 304 null text/javascript 47.884ms
+2026-06-24 12:40:49.943 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:44350/lib/bootstrap/dist/js/bootstrap.bundle.min.js - 304 null text/javascript 18.1464ms

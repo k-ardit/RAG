@@ -26,6 +26,8 @@ services:
       context: ./7_dockerSlack
       dockerfile: Dockerfile
     container_name: strava_slack
+    env_file:
+    - .env
     networks:
       - flow_01_strava_strava_network
     restart: unless-stopped
